@@ -1,0 +1,115 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package Object;
+
+/**
+ *
+ * @author Lenovo
+ */
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import org.bson.Document;
+import org.bson.conversions.Bson;
+import java.util.ArrayList;
+import java.util.List;
+
+public class KaryawanDAO implements BaseDAO<Karyawan> {
+    private final MongoCollection<Document> collection;
+
+    public KaryawanDAO(MongoDatabase db) {
+        this.collection = db.getCollection("karyawan");
+    }
+
+    @Override
+    public void save(Karyawan entity) {
+        Document doc = new Document("uidRfid", entity.getUidRfid())
+                .append("idKaryawan", entity.getIdKaryawan())
+                .append("namaLengkap", entity.getNamaLengkap())
+                .append("role", entity.getRole());
+        collection.insertOne(doc);
+    }
+
+    @Override
+    public void update(Bson filter, Karyawan entity) {
+        Document doc = new Document("uidRfid", entity.getUidRfid())
+                .append("idKaryawan", entity.getIdKaryawan())
+                .append("namaLengkap", entity.getNamaLengkap())
+                .append("role", entity.getRole());
+        collection.replaceOne(filter, doc);
+    }
+
+    @Override
+    public void delete(Bson filter) {
+        collection.deleteOne(filter);
+    }
+
+    @Override
+    public List<Karyawan> findAll() {
+        List<Karyawan> list = new ArrayList<>();
+        for (Document doc : collection.find()) {
+            list.add(new Karyawan(
+                    doc.getString("uidRfid"),
+                    doc.getString("idKaryawan"),
+                    doc.getString("namaLengkap"),
+                    doc.getString("role")
+            ));
+        }
+        return list;
+    }
+
+    @Override
+    public Karyawan findOne(Bson filter) {
+        Document doc = collection.find(filter).first();
+        if (doc != null) {
+            return new Karyawan(
+                    doc.getString("uidRfid"),
+                    doc.getString("idKaryawan"),
+                    doc.getString("namaLengkap"),
+                    doc.getString("role")
+            );
+        }
+        return null;
+    }
+    
+
+    @Override
+    public List<Karyawan> findMany(Bson filter) {
+        List<Karyawan> list = new ArrayList<>();
+        for (Document doc : collection.find(filter)) {
+            list.add(new Karyawan(
+                    doc.getString("uidRfid"),
+                    doc.getString("idKaryawan"),
+                    doc.getString("namaLengkap"),
+                    doc.getString("role")
+            ));
+        }
+        return list;
+    }
+    // Tambahan di KaryawanDAO
+    public Karyawan findByUsername(String username) {
+        Document doc = collection.find(new Document("username", username)).first();
+        if (doc != null) {
+            return new Karyawan(
+                    doc.getString("uidRfid"),
+                    doc.getString("idKaryawan"),
+                    doc.getString("namaLengkap"),
+                    doc.getString("role"),
+                    doc.getString("username"),
+                    doc.getString("password")
+            );
+        }
+        return null;
+}
+    public Karyawan login(String username, String password) {
+    Karyawan k = findByUsername(username);
+
+    if (k != null && k.getPassword() != null && k.getPassword().equals(password)) {
+        return k; // login berhasil
+    }
+
+    return null; // login gagal
+}
+
+}
