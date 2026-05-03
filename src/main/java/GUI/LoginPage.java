@@ -42,6 +42,8 @@ public class LoginPage extends javax.swing.JPanel {
 
         jPanel1.setBackground(new java.awt.Color(255, 153, 153));
 
+        jPanel2.setBackground(new java.awt.Color(204, 255, 255));
+
         jButton1.setText("Login");
         jButton1.addActionListener(this::jButton1ActionPerformed);
 

@@ -4,10 +4,6 @@
  */
 package Object;
 
-/**
- *
- * @author Lenovo
- */
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
@@ -16,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class KaryawanDAO implements BaseDAO<Karyawan> {
+
     private final MongoCollection<Document> collection;
 
     public KaryawanDAO(MongoDatabase db) {
@@ -27,7 +24,9 @@ public class KaryawanDAO implements BaseDAO<Karyawan> {
         Document doc = new Document("uidRfid", entity.getUidRfid())
                 .append("idKaryawan", entity.getIdKaryawan())
                 .append("namaLengkap", entity.getNamaLengkap())
-                .append("role", entity.getRole());
+                .append("role", entity.getRole())
+                .append("username", entity.getUsername())
+                .append("password", entity.getPassword());
         collection.insertOne(doc);
     }
 
@@ -36,7 +35,9 @@ public class KaryawanDAO implements BaseDAO<Karyawan> {
         Document doc = new Document("uidRfid", entity.getUidRfid())
                 .append("idKaryawan", entity.getIdKaryawan())
                 .append("namaLengkap", entity.getNamaLengkap())
-                .append("role", entity.getRole());
+                .append("role", entity.getRole())
+                .append("username", entity.getUsername())
+                .append("password", entity.getPassword());
         collection.replaceOne(filter, doc);
     }
 
@@ -53,7 +54,9 @@ public class KaryawanDAO implements BaseDAO<Karyawan> {
                     doc.getString("uidRfid"),
                     doc.getString("idKaryawan"),
                     doc.getString("namaLengkap"),
-                    doc.getString("role")
+                    doc.getString("role"),
+                    doc.getString("username"),
+                    doc.getString("password")
             ));
         }
         return list;
@@ -67,12 +70,13 @@ public class KaryawanDAO implements BaseDAO<Karyawan> {
                     doc.getString("uidRfid"),
                     doc.getString("idKaryawan"),
                     doc.getString("namaLengkap"),
-                    doc.getString("role")
+                    doc.getString("role"),
+                    doc.getString("username"),
+                    doc.getString("password")
             );
         }
         return null;
     }
-    
 
     @Override
     public List<Karyawan> findMany(Bson filter) {
@@ -82,12 +86,15 @@ public class KaryawanDAO implements BaseDAO<Karyawan> {
                     doc.getString("uidRfid"),
                     doc.getString("idKaryawan"),
                     doc.getString("namaLengkap"),
-                    doc.getString("role")
+                    doc.getString("role"),
+                    doc.getString("username"),
+                    doc.getString("password")
             ));
         }
         return list;
     }
-    // Tambahan di KaryawanDAO
+
+    // 🔍 Tambahan: cari berdasarkan username
     public Karyawan findByUsername(String username) {
         Document doc = collection.find(new Document("username", username)).first();
         if (doc != null) {
@@ -101,15 +108,35 @@ public class KaryawanDAO implements BaseDAO<Karyawan> {
             );
         }
         return null;
-}
-    public Karyawan login(String username, String password) {
-    Karyawan k = findByUsername(username);
-
-    if (k != null && k.getPassword() != null && k.getPassword().equals(password)) {
-        return k; // login berhasil
     }
 
-    return null; // login gagal
-}
+    // 🔍 Tambahan: login
+    public Karyawan login(String username, String password) {
+        Karyawan k = findByUsername(username);
+        if (k != null && k.getPassword() != null && k.getPassword().equals(password)) {
+            return k; // login berhasil
+        }
+        return null; // login gagal
+    }
 
+    // 🔍 Tambahan: cari berdasarkan keyword (nama/id)
+    public List<Karyawan> findByKeyword(String keyword) {
+        List<Karyawan> list = new ArrayList<>();
+        Document filter = new Document("$or", List.of(
+                new Document("namaLengkap", new Document("$regex", keyword).append("$options", "i")),
+                new Document("idKaryawan", new Document("$regex", keyword).append("$options", "i"))
+        ));
+
+        for (Document doc : collection.find(filter)) {
+            list.add(new Karyawan(
+                    doc.getString("uidRfid"),
+                    doc.getString("idKaryawan"),
+                    doc.getString("namaLengkap"),
+                    doc.getString("role"),
+                    doc.getString("username"),
+                    doc.getString("password")
+            ));
+        }
+        return list;
+    }
 }
