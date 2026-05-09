@@ -127,6 +127,7 @@ public class LoginPage extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+
         String username = jTextField1.getText();
         String password = new String(jPasswordField1.getPassword());
 
@@ -134,19 +135,24 @@ public class LoginPage extends javax.swing.JPanel {
             KaryawanDAO dao = new KaryawanDAO(MongoManager.getDatabase());
             Karyawan k = dao.login(username, password);
 
-            // ⬇️ DEBUG DI SINI
-            System.out.println("Hasil login: " + k);
+            System.out.println("Login sebagai: " + k.getNamaLengkap() + " | ID: " + k.getIdKaryawan());
 
             if (k != null) {
-
-                System.out.println("Role: " + k.getRole());
-
+                String role = k.getRole();
                 JFrame frame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
 
-                if (k.getRole().equalsIgnoreCase("manager")) {
+                if (role.equalsIgnoreCase("ADMIN")) {
+                    frame.setContentPane(new AdminPage());
+                } else if (role.equalsIgnoreCase("MANAGER")) {
                     frame.setContentPane(new ManagerPage());
+                } else if (role.equalsIgnoreCase("STAFF")) {
+                    frame.setContentPane(new StaffPage(k.getIdKaryawan())); // kirim ID dari objek Karyawan
                 } else {
-                    JOptionPane.showMessageDialog(this, "Bukan manager!");
+                    if (k == null) {
+                        JOptionPane.showMessageDialog(this, "Username atau password salah!");
+                        return;
+                    }
+
                 }
 
                 frame.revalidate();
@@ -159,6 +165,8 @@ public class LoginPage extends javax.swing.JPanel {
             e.printStackTrace();
             JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
         }
+
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jPasswordField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jPasswordField1ActionPerformed

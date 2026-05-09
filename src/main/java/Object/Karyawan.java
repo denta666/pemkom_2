@@ -12,6 +12,7 @@ public class Karyawan {
     private String role;      // "KARYAWAN" atau "MANAGER" atau "ADMIN"
     private String username;  // untuk login
     private String password;  // untuk login
+    private String jamMasuk;
 
     public Karyawan() {
     }
@@ -26,7 +27,7 @@ public class Karyawan {
 
     // Constructor untuk login (lengkap dengan username & password)
     public Karyawan(String uidRfid, String idKaryawan, String namaLengkap,
-                    String role, String username, String password) {
+            String role, String username, String password) {
         this.uidRfid = uidRfid;
         this.idKaryawan = idKaryawan;
         this.namaLengkap = namaLengkap;
@@ -37,31 +38,69 @@ public class Karyawan {
 
     @Override
     public String toString() {
-        return "Karyawan{" +
-                "uidRfid=" + uidRfid +
-                ", idKaryawan=" + idKaryawan +
-                ", namaLengkap=" + namaLengkap +
-                ", role=" + role +
-                ", username=" + username +
-                '}';
+        return "Karyawan{"
+                + "uidRfid=" + uidRfid
+                + ", idKaryawan=" + idKaryawan
+                + ", namaLengkap=" + namaLengkap
+                + ", role=" + role
+                + ", username=" + username
+                + '}';
     }
 
     // Getter & Setter
-    public String getUidRfid() { return uidRfid; }
-    public void setUidRfid(String uidRfid) { this.uidRfid = uidRfid; }
+    public String getUidRfid() {
+        return uidRfid;
+    }
 
-    public String getIdKaryawan() { return idKaryawan; }
-    public void setIdKaryawan(String idKaryawan) { this.idKaryawan = idKaryawan; }
+    public void setUidRfid(String uidRfid) {
+        this.uidRfid = uidRfid;
+    }
 
-    public String getNamaLengkap() { return namaLengkap; }
-    public void setNamaLengkap(String namaLengkap) { this.namaLengkap = namaLengkap; }
+    public String getIdKaryawan() {
+        return idKaryawan;
+    }
 
-    public String getRole() { return role; }
-    public void setRole(String role) { this.role = role; }
+    public void setIdKaryawan(String idKaryawan) {
+        this.idKaryawan = idKaryawan;
+    }
 
-    public String getUsername() { return username; }
-    public void setUsername(String username) { this.username = username; }
+    public String getNamaLengkap() {
+        return namaLengkap;
+    }
 
-    public String getPassword() { return password; }
-    public void setPassword(String password) { this.password = password; }
+    public void setNamaLengkap(String namaLengkap) {
+        this.namaLengkap = namaLengkap;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getJamMasuk() {
+        return jamMasuk;
+    }
+
+    public void setJamMasuk(String jamMasuk) {
+        this.jamMasuk = jamMasuk;
+    }
 }

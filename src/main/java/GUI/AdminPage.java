@@ -10,12 +10,14 @@ package GUI;
  */
 import Object.KaryawanDAO;
 import Object.Karyawan;
+import Object.KaryawanService;
+import Object.Kehadiran;
+import Object.KehadiranDAO;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
 import Object.MongoManager;
 import javax.swing.*;
 import java.awt.*;
-import javax.swing.table.DefaultTableModel;
 
 
 public class AdminPage extends javax.swing.JPanel {
@@ -25,13 +27,13 @@ public class AdminPage extends javax.swing.JPanel {
      */
     public AdminPage() {
         initComponents();
-        
-        
-        
-        tblKehadiran.setModel(new DefaultTableModel(
-                new Object[][]{},
-                new String[]{"ID", "Nama", "Role", "Username", "Password", "UID RFID"}
-        ));
+        btnAbsensi = new JButton("Absensi");
+        btnAbsensi.addActionListener(e -> {
+            JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
+            frame.setContentPane(new AdminAbsensiPage()); // ganti ke halaman AdminAbsensiPage
+            frame.revalidate();
+            frame.repaint();
+        });
 
     }
 
@@ -49,12 +51,9 @@ public class AdminPage extends javax.swing.JPanel {
         jButton1 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        tblKehadiran = new javax.swing.JTable();
         jPanel4 = new javax.swing.JPanel();
         BtnAddUser = new javax.swing.JButton();
-        btnDelete = new javax.swing.JButton();
-        btnUpdate = new javax.swing.JButton();
+        btnAbsensi = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jPanel5 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
@@ -64,8 +63,8 @@ public class AdminPage extends javax.swing.JPanel {
         jLabel5 = new javax.swing.JLabel();
         jTextField2 = new javax.swing.JTextField();
         jButton5 = new javax.swing.JButton();
-        jPanel6 = new javax.swing.JPanel();
         btnRefresh = new javax.swing.JButton();
+        jPanelKaryawan = new javax.swing.JPanel();
 
         jPanel1.setBackground(new java.awt.Color(255, 153, 153));
 
@@ -99,29 +98,13 @@ public class AdminPage extends javax.swing.JPanel {
                 .addGap(17, 17, 17))
         );
 
-        tblKehadiran.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
-            },
-            new String [] {
-                "ID", "NAMA", "TANGGAL", "STATUS", "ROLE"
-            }
-        ));
-        jScrollPane1.setViewportView(tblKehadiran);
-
         jPanel4.setBackground(new java.awt.Color(0, 51, 153));
 
         BtnAddUser.setText("Tambah User");
         BtnAddUser.addActionListener(this::BtnAddUserActionPerformed);
 
-        btnDelete.setText("Hapus User");
-        btnDelete.addActionListener(this::btnDeleteActionPerformed);
-
-        btnUpdate.setText("Update User");
-        btnUpdate.addActionListener(this::btnUpdateActionPerformed);
+        btnAbsensi.setText("Absensi");
+        btnAbsensi.addActionListener(this::btnAbsensiActionPerformed);
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -131,9 +114,7 @@ public class AdminPage extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(BtnAddUser)
                 .addGap(18, 18, 18)
-                .addComponent(btnDelete)
-                .addGap(18, 18, 18)
-                .addComponent(btnUpdate)
+                .addComponent(btnAbsensi)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
@@ -142,8 +123,7 @@ public class AdminPage extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(BtnAddUser)
-                    .addComponent(btnDelete)
-                    .addComponent(btnUpdate))
+                    .addComponent(btnAbsensi))
                 .addContainerGap(8, Short.MAX_VALUE))
         );
 
@@ -195,19 +175,6 @@ public class AdminPage extends javax.swing.JPanel {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jPanel6.setBackground(new java.awt.Color(0, 0, 0));
-
-        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
-        jPanel6.setLayout(jPanel6Layout);
-        jPanel6Layout.setHorizontalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 158, Short.MAX_VALUE)
-        );
-        jPanel6Layout.setVerticalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 299, Short.MAX_VALUE)
-        );
-
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -216,19 +183,15 @@ public class AdminPage extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(112, 112, 112)
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 600, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addContainerGap())))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap(18, Short.MAX_VALUE)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18))
+                        .addContainerGap())
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addGap(112, 112, 112)
+                                .addComponent(jLabel2))
+                            .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 231, Short.MAX_VALUE))))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -237,14 +200,22 @@ public class AdminPage extends javax.swing.JPanel {
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, Short.MAX_VALUE)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel2))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 307, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel2))
+        );
+
+        btnRefresh.setText("REFRESH");
+        btnRefresh.addActionListener(this::btnRefreshActionPerformed);
+
+        javax.swing.GroupLayout jPanelKaryawanLayout = new javax.swing.GroupLayout(jPanelKaryawan);
+        jPanelKaryawan.setLayout(jPanelKaryawanLayout);
+        jPanelKaryawanLayout.setHorizontalGroup(
+            jPanelKaryawanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        jPanelKaryawanLayout.setVerticalGroup(
+            jPanelKaryawanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 519, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -252,9 +223,15 @@ public class AdminPage extends javax.swing.JPanel {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnRefresh)
+                .addGap(18, 18, 18))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanelKaryawan, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -262,30 +239,25 @@ public class AdminPage extends javax.swing.JPanel {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 396, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanelKaryawan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnRefresh)
+                .addContainerGap(19, Short.MAX_VALUE))
         );
-
-        btnRefresh.setText("REFRESH");
-        btnRefresh.addActionListener(this::btnRefreshActionPerformed);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnRefresh)
-                .addGap(22, 22, 22))
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(btnRefresh)
-                .addGap(0, 9, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -332,94 +304,34 @@ public class AdminPage extends javax.swing.JPanel {
     }//GEN-LAST:event_BtnAddUserActionPerformed
 
     private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
-                                           
-    // Ambil data dari database
-    KaryawanDAO dao = new KaryawanDAO(MongoManager.getDatabase());
-    java.util.List<Karyawan> list = dao.findAll();
+        
+    KaryawanService service = new KaryawanService();
+    service.tampilkanSemuaKaryawan(jPanelKaryawan); 
 
-    // Reset tabel
-    DefaultTableModel model = (DefaultTableModel) tblKehadiran.getModel();
-    model.setRowCount(0);
-
-    // Isi ulang tabel dengan data terbaru
-    for (Karyawan k : list) {
-        model.addRow(new Object[]{
-            k.getIdKaryawan(),
-            k.getNamaLengkap(),
-            k.getRole(),
-            k.getUsername(),
-            k.getPassword(),
-            k.getUidRfid()
-        });
-    }
-
-    JOptionPane.showMessageDialog(this, "Data berhasil di-refresh!");
 
     }//GEN-LAST:event_btnRefreshActionPerformed
 
-    private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
-        int selectedRow = tblKehadiran.getSelectedRow();
-        if (selectedRow == -1) {
-            JOptionPane.showMessageDialog(this, "Pilih user yang ingin diupdate!");
-            return;
-        }
+    private void btnAbsensiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAbsensiActionPerformed
+                                         
+    // Buat instance halaman AdminAbsensiPage
+    AdminAbsensiPage absensiPage = new AdminAbsensiPage();
 
-        String id = tblKehadiran.getValueAt(selectedRow, 0).toString();
+    // Ambil frame utama tempat AdminPage ditampilkan
+    JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
 
-        JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
-        UserFormDialog dialog = new UserFormDialog(parentFrame);
-
-        // isi field dengan data lama
-        dialog.setVisible(true);
-
-        if (dialog.isSaved()) {
-            KaryawanDAO dao = new KaryawanDAO(MongoManager.getDatabase());
-            org.bson.conversions.Bson filter = new org.bson.Document("id", id);
-            Karyawan k = dao.findOne(filter);
-
-            if (k != null) {
-                k.setNamaLengkap(dialog.getNama());
-                k.setRole(dialog.getRole());
-                k.setUsername(dialog.getUsername());
-                k.setPassword(dialog.getPassword());
-                k.setUidRfid(dialog.getUidRfid());
-                dao.update(filter, k);
-                JOptionPane.showMessageDialog(this, "User berhasil diupdate!");
-                btnRefreshActionPerformed(evt);
-            }
-        }
+    // Ganti konten frame dengan halaman AdminAbsensiPage
+    frame.setContentPane(absensiPage);
+    frame.revalidate();
+    frame.repaint();
 
 
-    }//GEN-LAST:event_btnUpdateActionPerformed
-
-    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
-    int selectedRow = tblKehadiran.getSelectedRow();
-    if (selectedRow == -1) {
-        JOptionPane.showMessageDialog(this, "Pilih user yang ingin dihapus!");
-        return;
-    }
-
-    String id = tblKehadiran.getValueAt(selectedRow, 0).toString();
-    int confirm = JOptionPane.showConfirmDialog(this,
-        "Yakin ingin menghapus user dengan ID " + id + "?",
-        "Konfirmasi", JOptionPane.YES_NO_OPTION);
-
-    if (confirm == JOptionPane.YES_OPTION) {
-        KaryawanDAO dao = new KaryawanDAO(MongoManager.getDatabase());
-        org.bson.conversions.Bson filter = new org.bson.Document("id", id);
-        dao.delete(filter);
-        JOptionPane.showMessageDialog(this, "User berhasil dihapus!");
-        btnRefreshActionPerformed(evt);
-    }
-
-    }//GEN-LAST:event_btnDeleteActionPerformed
+    }//GEN-LAST:event_btnAbsensiActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BtnAddUser;
-    private javax.swing.JButton btnDelete;
+    private javax.swing.JButton btnAbsensi;
     private javax.swing.JButton btnRefresh;
-    private javax.swing.JButton btnUpdate;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton5;
     private javax.swing.JComboBox<String> jComboBox1;
@@ -433,10 +345,8 @@ public class AdminPage extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
-    private javax.swing.JPanel jPanel6;
-    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JPanel jPanelKaryawan;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
-    private javax.swing.JTable tblKehadiran;
     // End of variables declaration//GEN-END:variables
 }

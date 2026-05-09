@@ -110,11 +110,20 @@ public class KaryawanDAO implements BaseDAO<Karyawan> {
         return null;
     }
 
-    // 🔍 Tambahan: login
     public Karyawan login(String username, String password) {
-        Karyawan k = findByUsername(username);
-        if (k != null && k.getPassword() != null && k.getPassword().equals(password)) {
-            return k; // login berhasil
+        Document filter = new Document("username", username)
+                .append("password", password);
+        Document doc = collection.find(filter).first();
+
+        if (doc != null) {
+            return new Karyawan(
+                    doc.getString("uidRfid"),
+                    doc.getString("idKaryawan"),
+                    doc.getString("namaLengkap"),
+                    doc.getString("role"),
+                    doc.getString("username"),
+                    doc.getString("password")
+            );
         }
         return null; // login gagal
     }

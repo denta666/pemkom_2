@@ -12,39 +12,48 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class KehadiranDAO implements BaseDAO<Kehadiran> {
+
     private final MongoCollection<Document> collection;
 
     public KehadiranDAO(MongoDatabase db) {
         this.collection = db.getCollection("kehadiran");
     }
 
+    // CREATE
     @Override
     public void save(Kehadiran entity) {
         Document doc = new Document("id", entity.getId())
                 .append("uidRfid", entity.getUidRfid())
                 .append("nama", entity.getNama())
                 .append("tanggal", entity.getTanggal())
+                .append("jamMasuk", entity.getJamMasuk()) 
                 .append("status", entity.getStatus())
                 .append("role", entity.getRole());
         collection.insertOne(doc);
     }
 
+    // UPDATE (ubah status berdasarkan id + tanggal)
     @Override
     public void update(Bson filter, Kehadiran entity) {
-        Document doc = new Document("id", entity.getId())
+        Bson filterDoc = new Document("id", entity.getId())
+                .append("tanggal", entity.getTanggal());
+
+        Document updateDoc = new Document("$set", new Document("status", entity.getStatus())
                 .append("uidRfid", entity.getUidRfid())
                 .append("nama", entity.getNama())
-                .append("tanggal", entity.getTanggal())
-                .append("status", entity.getStatus())
-                .append("role", entity.getRole());
-        collection.replaceOne(filter, doc);
+                .append("jamMasuk", entity.getJamMasuk())
+                .append("role", entity.getRole()));
+
+        collection.updateOne(filterDoc, updateDoc);
     }
 
+    // DELETE
     @Override
     public void delete(Bson filter) {
         collection.deleteOne(filter);
     }
 
+    // READ ALL
     @Override
     public List<Kehadiran> findAll() {
         List<Kehadiran> list = new ArrayList<>();
@@ -54,6 +63,7 @@ public class KehadiranDAO implements BaseDAO<Kehadiran> {
                     doc.getString("uidRfid"),
                     doc.getString("nama"),
                     doc.getString("tanggal"),
+                    doc.getString("jamMasuk"), 
                     doc.getString("status"),
                     doc.getString("role")
             ));
@@ -61,6 +71,7 @@ public class KehadiranDAO implements BaseDAO<Kehadiran> {
         return list;
     }
 
+    // READ ONE
     @Override
     public Kehadiran findOne(Bson filter) {
         Document doc = collection.find(filter).first();
@@ -70,6 +81,7 @@ public class KehadiranDAO implements BaseDAO<Kehadiran> {
                     doc.getString("uidRfid"),
                     doc.getString("nama"),
                     doc.getString("tanggal"),
+                    doc.getString("jamMasuk"),
                     doc.getString("status"),
                     doc.getString("role")
             );
@@ -77,6 +89,7 @@ public class KehadiranDAO implements BaseDAO<Kehadiran> {
         return null;
     }
 
+    // READ MANY
     @Override
     public List<Kehadiran> findMany(Bson filter) {
         List<Kehadiran> list = new ArrayList<>();
@@ -86,6 +99,7 @@ public class KehadiranDAO implements BaseDAO<Kehadiran> {
                     doc.getString("uidRfid"),
                     doc.getString("nama"),
                     doc.getString("tanggal"),
+                    doc.getString("jamMasuk"),
                     doc.getString("status"),
                     doc.getString("role")
             ));
@@ -104,8 +118,8 @@ public class KehadiranDAO implements BaseDAO<Kehadiran> {
 
         if (keyword != null && !keyword.isEmpty()) {
             filter.append("$or", List.of(
-                new Document("nama", new Document("$regex", keyword).append("$options", "i")),
-                new Document("id", new Document("$regex", keyword).append("$options", "i"))
+                    new Document("nama", new Document("$regex", keyword).append("$options", "i")),
+                    new Document("id", new Document("$regex", keyword).append("$options", "i"))
             ));
         }
 
@@ -115,6 +129,7 @@ public class KehadiranDAO implements BaseDAO<Kehadiran> {
                     doc.getString("uidRfid"),
                     doc.getString("nama"),
                     doc.getString("tanggal"),
+                    doc.getString("jamMasuk"), 
                     doc.getString("status"),
                     doc.getString("role")
             ));

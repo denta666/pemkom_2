@@ -11,40 +11,53 @@ package GUI;
 import Object.MongoManager;
 import Object.KehadiranDAO;
 import Object.Kehadiran;
+import Object.KehadiranService;
 import com.mongodb.client.MongoDatabase;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.util.List;
+import javax.swing.JOptionPane;
+import org.bson.Document;
+import org.bson.conversions.Bson;
 
 public class ManagerPage extends javax.swing.JPanel {
-    
+
+    private final KehadiranDAO dao;
+
     public ManagerPage() {
-    initComponents();
-    loadDataKehadiran(); // panggil load awal
-}
-
-private void loadDataKehadiran() {
-    try {
-        KehadiranDAO dao = new KehadiranDAO(MongoManager.getDatabase());
-        List<Kehadiran> list = dao.findAll();
-
-        DefaultTableModel model = (DefaultTableModel) tblKehadiran.getModel();
-        model.setRowCount(0);
-
-        for (Kehadiran k : list) {
-            model.addRow(new Object[]{
-                k.getId(),
-                k.getNama(),
-                k.getTanggal(),
-                k.getStatus()
-            });
-        }
-    } catch (Exception e) {
-        e.printStackTrace(); // biar kelihatan error detail di console
-        JOptionPane.showMessageDialog(this, "Error load data: " + e.getMessage());
+        initComponents();
+        btnRefreshActionPerformed(null);
+        dao = new KehadiranDAO(MongoManager.getDatabase());
+        // panggil load awal
     }
-}
 
+    public void tampilkanSemuaAbsensi(JPanel panelContainer) {
+        panelContainer.removeAll();
+        panelContainer.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 10));
+
+        List<Kehadiran> list = dao.findAll();
+        for (Kehadiran a : list) {
+            JPanel card = new JPanel();
+            card.setBackground(new Color(255, 204, 153));
+            card.setPreferredSize(new Dimension(280, 130));
+            card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
+
+            card.add(new JLabel("Nama: " + a.getNama()));
+            card.add(new JLabel("Tanggal: " + a.getTanggal()));
+            card.add(new JLabel("Jam Masuk: " + a.getJamMasuk()));
+            card.add(new JLabel("Status: " + a.getStatus()));
+            card.add(new JLabel("Role: " + a.getRole()));
+            
+
+            panelContainer.add(card);
+        }
+
+        panelContainer.revalidate();
+        panelContainer.repaint();
+    }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -54,9 +67,6 @@ private void loadDataKehadiran() {
         jPanel2 = new javax.swing.JPanel();
         lblHeader = new javax.swing.JLabel();
         btnLogout = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        tblKehadiran = new javax.swing.JTable();
-        jPanel3 = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
         btnSearch = new javax.swing.JButton();
         cmbRole = new javax.swing.JComboBox<>();
@@ -65,7 +75,8 @@ private void loadDataKehadiran() {
         txtNama = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         txtTanggal = new javax.swing.JTextField();
-        jButton2 = new javax.swing.JButton();
+        btnRefresh = new javax.swing.JButton();
+        jPanelAbsensi = new javax.swing.JPanel();
 
         jPanel1.setBackground(new java.awt.Color(255, 153, 153));
 
@@ -102,36 +113,11 @@ private void loadDataKehadiran() {
                 .addGap(15, 15, 15))
         );
 
-        tblKehadiran.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
-            },
-            new String [] {
-                "ID", "Nama", "Tanggal", "Status", "Role"
-            }
-        ));
-        jScrollPane1.setViewportView(tblKehadiran);
-
-        jPanel3.setBackground(new java.awt.Color(0, 0, 0));
-
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 197, Short.MAX_VALUE)
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 280, Short.MAX_VALUE)
-        );
-
         btnSearch.setText("Search");
         btnSearch.addActionListener(this::btnSearchActionPerformed);
 
         cmbRole.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cmbRole.addActionListener(this::cmbRoleActionPerformed);
 
         jLabel1.setText("Role :");
 
@@ -156,7 +142,7 @@ private void loadDataKehadiran() {
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtTanggal, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 287, Short.MAX_VALUE)
                 .addComponent(btnSearch)
                 .addGap(27, 27, 27))
         );
@@ -175,26 +161,34 @@ private void loadDataKehadiran() {
                 .addContainerGap(15, Short.MAX_VALUE))
         );
 
-        jButton2.setText("REFRESH");
+        btnRefresh.setText("REFRESH");
+        btnRefresh.addActionListener(this::btnRefreshActionPerformed);
+
+        javax.swing.GroupLayout jPanelAbsensiLayout = new javax.swing.GroupLayout(jPanelAbsensi);
+        jPanelAbsensi.setLayout(jPanelAbsensiLayout);
+        jPanelAbsensiLayout.setHorizontalGroup(
+            jPanelAbsensiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        jPanelAbsensiLayout.setVerticalGroup(
+            jPanelAbsensiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 389, Short.MAX_VALUE)
+        );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(40, 40, 40)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane1)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(jButton2)))))
-                .addGap(50, 50, 50))
             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btnRefresh))
+                    .addComponent(jPanelAbsensi, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -202,33 +196,50 @@ private void loadDataKehadiran() {
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(9, 9, 9)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton2))
-                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(30, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jPanelAbsensi, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnRefresh)
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
+        KehadiranService service = new KehadiranService();
+
+        // Panggil method untuk menampilkan semua absensi ke panel
+        service.tampilkanSemuaAbsensi(jPanelAbsensi);
+    }//GEN-LAST:event_btnRefreshActionPerformed
+
+    private void cmbRoleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbRoleActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cmbRoleActionPerformed
+
+    private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
+
+    }//GEN-LAST:event_btnSearchActionPerformed
 
     private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
 
         // Ambil frame induk dari ManagerPage (karena ManagerPage adalah JPanel)
-        javax.swing.JFrame parentFrame =
-        (javax.swing.JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
+        javax.swing.JFrame parentFrame
+                = (javax.swing.JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
 
         // Tutup frame Manager
         parentFrame.dispose();
@@ -240,46 +251,22 @@ private void loadDataKehadiran() {
         loginFrame.pack();
         loginFrame.setLocationRelativeTo(null);
         loginFrame.setVisible(true);
-
     }//GEN-LAST:event_btnLogoutActionPerformed
-
-    private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
-                                             
-    String role = cmbRole.getSelectedItem().toString();
-    String tanggal = txtTanggal.getText();
-    String keyword = txtNama.getText();
-
-    KehadiranDAO dao = new KehadiranDAO(MongoManager.getDatabase());
-    List<Kehadiran> list = dao.findByFilter(tanggal, keyword);
-
-    DefaultTableModel model = (DefaultTableModel) tblKehadiran.getModel();
-    model.setRowCount(0);
-
-    for (Kehadiran k : list) {
-        model.addRow(new Object[]{
-            k.getId(), k.getNama(), k.getTanggal(), k.getStatus(), k.getRole()
-        });
-    }
-
-
-    }//GEN-LAST:event_btnSearchActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnLogout;
+    private javax.swing.JButton btnRefresh;
     private javax.swing.JButton btnSearch;
     private javax.swing.JComboBox<String> cmbRole;
-    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
-    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JPanel jPanelAbsensi;
     private javax.swing.JLabel lblHeader;
-    private javax.swing.JTable tblKehadiran;
     private javax.swing.JTextField txtNama;
     private javax.swing.JTextField txtTanggal;
     // End of variables declaration//GEN-END:variables
