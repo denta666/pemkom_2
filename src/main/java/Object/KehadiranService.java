@@ -8,7 +8,6 @@ package Object;
  *
  * @author Lenovo
  */
-
 import java.awt.*;
 import java.util.List;
 import javax.swing.*;
@@ -43,15 +42,28 @@ public class KehadiranService {
             JButton btnHapus = new JButton("Hapus");
 
             btnUbah.addActionListener(e -> {
-                JOptionPane.showMessageDialog(panelContainer,
-                    "Fitur ubah status untuk " + a.getNama() + " belum diimplementasikan.",
-                    "Ubah Status", JOptionPane.INFORMATION_MESSAGE);
+                String[] opsiStatus = {"HADIR", "IZIN", "ALPHA"};
+                String newStatus = (String) JOptionPane.showInputDialog(panelContainer,
+                        "Pilih status baru untuk " + a.getNama() + ":",
+                        "Ubah Status",
+                        JOptionPane.QUESTION_MESSAGE,
+                        null,
+                        opsiStatus,
+                        a.getStatus());
+
+                if (newStatus != null) {
+                    a.setStatus(newStatus);
+                    dao.update(new org.bson.Document("id", a.getId()), a);
+                    JOptionPane.showMessageDialog(panelContainer,
+                            "Status berhasil diubah menjadi " + newStatus + "!");
+                    tampilkanSemuaAbsensi(panelContainer); // refresh otomatis
+                }
             });
 
             btnHapus.addActionListener(e -> {
                 int confirm = JOptionPane.showConfirmDialog(panelContainer,
-                    "Yakin ingin menghapus data absensi " + a.getNama() + "?",
-                    "Konfirmasi Hapus", JOptionPane.YES_NO_OPTION);
+                        "Yakin ingin menghapus data absensi " + a.getNama() + "?",
+                        "Konfirmasi Hapus", JOptionPane.YES_NO_OPTION);
                 if (confirm == JOptionPane.YES_OPTION) {
                     dao.delete(new org.bson.Document("id", a.getId()));
                     JOptionPane.showMessageDialog(panelContainer, "Data absensi berhasil dihapus!");

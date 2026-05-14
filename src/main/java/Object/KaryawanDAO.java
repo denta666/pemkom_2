@@ -9,6 +9,7 @@ import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class KaryawanDAO implements BaseDAO<Karyawan> {
@@ -131,7 +132,7 @@ public class KaryawanDAO implements BaseDAO<Karyawan> {
     // 🔍 Tambahan: cari berdasarkan keyword (nama/id)
     public List<Karyawan> findByKeyword(String keyword) {
         List<Karyawan> list = new ArrayList<>();
-        Document filter = new Document("$or", List.of(
+        Document filter = new Document("$or", Arrays.asList(
                 new Document("namaLengkap", new Document("$regex", keyword).append("$options", "i")),
                 new Document("idKaryawan", new Document("$regex", keyword).append("$options", "i"))
         ));
@@ -148,4 +149,5 @@ public class KaryawanDAO implements BaseDAO<Karyawan> {
         }
         return list;
     }
+
 }

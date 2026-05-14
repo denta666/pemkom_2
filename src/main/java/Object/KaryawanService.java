@@ -59,13 +59,21 @@ public class KaryawanService {
             });
 
             // Aksi tombol Delete
-            btnDelete.addActionListener(e -> {
-                int confirm = JOptionPane.showConfirmDialog(panelContainer,
-                        "Yakin ingin menghapus user " + k.getNamaLengkap() + "?",
-                        "Konfirmasi Hapus", JOptionPane.YES_NO_OPTION);
-                if (confirm == JOptionPane.YES_OPTION) {
-                    dao.delete(new org.bson.Document("idKaryawan", k.getIdKaryawan()));
-                    JOptionPane.showMessageDialog(panelContainer, "User berhasil dihapus!");
+            btnUpdate.addActionListener(e -> {
+                String newUsername = JOptionPane.showInputDialog(panelContainer,
+                        "Masukkan username baru:", k.getUsername());
+                String newPassword = JOptionPane.showInputDialog(panelContainer,
+                        "Masukkan password baru:", k.getPassword());
+                String newRole = JOptionPane.showInputDialog(panelContainer,
+                        "Masukkan role baru:", k.getRole());
+
+                if (newUsername != null && newPassword != null && newRole != null) {
+                    k.setUsername(newUsername);
+                    k.setPassword(newPassword);
+                    k.setRole(newRole);
+
+                    dao.update(new org.bson.Document("idKaryawan", k.getIdKaryawan()), k);
+                    JOptionPane.showMessageDialog(panelContainer, "Data berhasil diperbarui!");
                     tampilkanSemuaKaryawan(panelContainer); // refresh otomatis
                 }
             });
