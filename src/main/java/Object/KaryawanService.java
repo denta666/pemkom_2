@@ -7,6 +7,7 @@ package Object;
 import java.awt.*;
 import java.util.List;
 import javax.swing.*;
+import org.bson.Document;
 
 public class KaryawanService {
 
@@ -50,15 +51,7 @@ public class KaryawanService {
                         "Detail Karyawan", JOptionPane.INFORMATION_MESSAGE);
             });
 
-            // Aksi tombol Update
-            btnUpdate.addActionListener(e -> {
-                JOptionPane.showMessageDialog(panelContainer,
-                        "Fitur update user untuk " + k.getNamaLengkap() + " belum diimplementasikan.",
-                        "Update User", JOptionPane.INFORMATION_MESSAGE);
-                // Di sini nanti bisa kamu sambungkan ke form edit user
-            });
-
-            // Aksi tombol Delete
+            // 🔹 Update
             btnUpdate.addActionListener(e -> {
                 String newUsername = JOptionPane.showInputDialog(panelContainer,
                         "Masukkan username baru:", k.getUsername());
@@ -71,9 +64,20 @@ public class KaryawanService {
                     k.setUsername(newUsername);
                     k.setPassword(newPassword);
                     k.setRole(newRole);
-
-                    dao.update(new org.bson.Document("idKaryawan", k.getIdKaryawan()), k);
+                    dao.update(new Document("idKaryawan", k.getIdKaryawan()), k);
                     JOptionPane.showMessageDialog(panelContainer, "Data berhasil diperbarui!");
+                    tampilkanSemuaKaryawan(panelContainer); // refresh otomatis
+                }
+            });
+
+            // 🔹 Delete
+            btnDelete.addActionListener(e -> {
+                int confirm = JOptionPane.showConfirmDialog(panelContainer,
+                        "Yakin ingin menghapus user " + k.getNamaLengkap() + "?",
+                        "Konfirmasi Hapus", JOptionPane.YES_NO_OPTION);
+                if (confirm == JOptionPane.YES_OPTION) {
+                    dao.delete(new Document("idKaryawan", k.getIdKaryawan()));
+                    JOptionPane.showMessageDialog(panelContainer, "User berhasil dihapus!");
                     tampilkanSemuaKaryawan(panelContainer); // refresh otomatis
                 }
             });
