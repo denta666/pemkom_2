@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package Object;
 
 import com.mongodb.client.MongoCollection;
@@ -11,6 +7,7 @@ import org.bson.conversions.Bson;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import utility.SecurityUtility; // import hashing
 
 public class KaryawanDAO implements BaseDAO<Karyawan> {
 
@@ -22,23 +19,29 @@ public class KaryawanDAO implements BaseDAO<Karyawan> {
 
     @Override
     public void save(Karyawan entity) {
+        // Hash password sebelum disimpan
+        String hashedPassword = SecurityUtility.getHash(entity.getPassword(), SecurityUtility.SHA_256);
+
         Document doc = new Document("uidRfid", entity.getUidRfid())
                 .append("idKaryawan", entity.getIdKaryawan())
                 .append("namaLengkap", entity.getNamaLengkap())
                 .append("role", entity.getRole())
                 .append("username", entity.getUsername())
-                .append("password", entity.getPassword());
+                .append("password", hashedPassword);
         collection.insertOne(doc);
     }
 
     @Override
     public void update(Bson filter, Karyawan entity) {
+        // Hash password sebelum update
+        String hashedPassword = SecurityUtility.getHash(entity.getPassword(), SecurityUtility.SHA_256);
+
         Document doc = new Document("uidRfid", entity.getUidRfid())
                 .append("idKaryawan", entity.getIdKaryawan())
                 .append("namaLengkap", entity.getNamaLengkap())
                 .append("role", entity.getRole())
                 .append("username", entity.getUsername())
-                .append("password", entity.getPassword());
+                .append("password", hashedPassword);
         collection.replaceOne(filter, doc);
     }
 
@@ -95,7 +98,7 @@ public class KaryawanDAO implements BaseDAO<Karyawan> {
         return list;
     }
 
-    // 🔍 Tambahan: cari berdasarkan username
+    // 🔍 Cari berdasarkan username
     public Karyawan findByUsername(String username) {
         Document doc = collection.find(new Document("username", username)).first();
         if (doc != null) {
@@ -111,9 +114,12 @@ public class KaryawanDAO implements BaseDAO<Karyawan> {
         return null;
     }
 
-    public Karyawan login(String username, String password) {
+    // 🔐 Login dengan hashing
+    public Karyawan login(String username, String plainPassword) {
+        String hashedPassword = SecurityUtility.getHash(plainPassword, SecurityUtility.SHA_256);
+
         Document filter = new Document("username", username)
-                .append("password", password);
+                .append("password", hashedPassword);
         Document doc = collection.find(filter).first();
 
         if (doc != null) {
@@ -129,7 +135,7 @@ public class KaryawanDAO implements BaseDAO<Karyawan> {
         return null; // login gagal
     }
 
-    // 🔍 Tambahan: cari berdasarkan keyword (nama/id)
+    // 🔍 Cari berdasarkan keyword (nama/id)
     public List<Karyawan> findByKeyword(String keyword) {
         List<Karyawan> list = new ArrayList<>();
         Document filter = new Document("$or", Arrays.asList(
@@ -149,5 +155,4 @@ public class KaryawanDAO implements BaseDAO<Karyawan> {
         }
         return list;
     }
-
 }

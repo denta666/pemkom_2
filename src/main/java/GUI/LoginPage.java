@@ -13,6 +13,8 @@ import Object.KaryawanDAO;
 import Object.Karyawan;
 import com.mongodb.client.MongoDatabase;
 import javax.swing.*;
+import utility.SecurityUtility;
+
 
 public class LoginPage extends javax.swing.JPanel {
 
@@ -130,10 +132,13 @@ public class LoginPage extends javax.swing.JPanel {
 
         String username = jTextField1.getText();
         String password = new String(jPasswordField1.getPassword());
+        String hashedPassword = SecurityUtility.getHash(password, SecurityUtility.SHA_256);
+
 
         try {
             KaryawanDAO dao = new KaryawanDAO(MongoManager.getDatabase());
-            Karyawan k = dao.login(username, password);
+            Karyawan k = dao.login(username, hashedPassword);
+
 
             System.out.println("Login sebagai: " + k.getNamaLengkap() + " | ID: " + k.getIdKaryawan());
 

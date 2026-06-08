@@ -10,7 +10,7 @@ package GUI;
  */
 import Object.KaryawanDAO;
 import Object.Karyawan;
-import Object.KaryawanService;
+import service.KaryawanService;
 import Object.Kehadiran;
 import Object.KehadiranDAO;
 import com.mongodb.client.MongoDatabase;
@@ -48,7 +48,7 @@ public class AdminPage extends javax.swing.JPanel {
 
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
+        btnLogout = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
@@ -66,8 +66,8 @@ public class AdminPage extends javax.swing.JPanel {
 
         jPanel2.setBackground(new java.awt.Color(0, 51, 153));
 
-        jButton1.setText("LOGOUT");
-        jButton1.addActionListener(this::jButton1ActionPerformed);
+        btnLogout.setText("LOGOUT");
+        btnLogout.addActionListener(this::btnLogoutActionPerformed);
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
@@ -81,7 +81,7 @@ public class AdminPage extends javax.swing.JPanel {
                 .addGap(14, 14, 14)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton1)
+                .addComponent(btnLogout)
                 .addGap(19, 19, 19))
         );
         jPanel2Layout.setVerticalGroup(
@@ -89,7 +89,7 @@ public class AdminPage extends javax.swing.JPanel {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addContainerGap(20, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
+                    .addComponent(btnLogout)
                     .addComponent(jLabel1))
                 .addGap(17, 17, 17))
         );
@@ -227,7 +227,7 @@ public class AdminPage extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
 
         // Ambil frame induk dari AdminPage (karena AdminPage adalah JPanel)
         javax.swing.JFrame parentFrame
@@ -245,7 +245,7 @@ public class AdminPage extends javax.swing.JPanel {
         loginFrame.setVisible(true);
 
 
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_btnLogoutActionPerformed
 
     private void BtnAddUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnAddUserActionPerformed
 
@@ -437,8 +437,8 @@ public class AdminPage extends javax.swing.JPanel {
     private javax.swing.JButton btnAbsensi;
     private javax.swing.JButton btnCari;
     private javax.swing.JTextField btnCariNama;
+    private javax.swing.JButton btnLogout;
     private javax.swing.JButton btnRefresh;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;
