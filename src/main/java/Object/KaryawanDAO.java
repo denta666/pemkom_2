@@ -19,16 +19,27 @@ public class KaryawanDAO implements BaseDAO<Karyawan> {
 
     @Override
     public void save(Karyawan entity) {
-        // Hash password sebelum disimpan
+        long count = collection.countDocuments();
+        String idKaryawan = (entity.getRole().equalsIgnoreCase("ADMIN") ? "ADM" : "STF")
+                + String.format("%03d", count + 1);
+
+        // kalau uidRfid kosong → generate otomatis
+        String uidRfid = (entity.getUidRfid() == null || entity.getUidRfid().isEmpty())
+                ? "RFID" + String.format("%04d", count + 1) // contoh format otomatis
+                : entity.getUidRfid();                        // kalau ada input manual, pakai itu
+
+        // hash password
         String hashedPassword = SecurityUtility.getHash(entity.getPassword(), SecurityUtility.SHA_256);
 
-        Document doc = new Document("uidRfid", entity.getUidRfid())
-                .append("idKaryawan", entity.getIdKaryawan())
+        Document doc = new Document("uidRfid", uidRfid)
+                .append("idKaryawan", idKaryawan)
                 .append("namaLengkap", entity.getNamaLengkap())
                 .append("role", entity.getRole())
                 .append("username", entity.getUsername())
                 .append("password", hashedPassword);
+
         collection.insertOne(doc);
+        System.out.println("User baru disimpan dengan ID: " + idKaryawan + " | UID: " + uidRfid);
     }
 
     @Override
@@ -155,4 +166,22 @@ public class KaryawanDAO implements BaseDAO<Karyawan> {
         }
         return list;
     }
+
+    public Karyawan findByUid(String uidRfid) {
+        Document filter = new Document("uidRfid", uidRfid);
+        Document doc = collection.find(filter).first();
+
+        if (doc != null) {
+            return new Karyawan(
+                    doc.getString("uidRfid"),
+                    doc.getString("idKaryawan"),
+                    doc.getString("namaLengkap"),
+                    doc.getString("role"),
+                    doc.getString("username"),
+                    doc.getString("password")
+            );
+        }
+        return null;
+    }
+
 }

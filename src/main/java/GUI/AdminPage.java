@@ -55,6 +55,7 @@ public class AdminPage extends javax.swing.JPanel {
         BtnAddUser = new javax.swing.JButton();
         btnAbsensi = new javax.swing.JButton();
         btnRefresh = new javax.swing.JButton();
+        Absen = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jPanel5 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
@@ -99,11 +100,14 @@ public class AdminPage extends javax.swing.JPanel {
         BtnAddUser.setText("Tambah User");
         BtnAddUser.addActionListener(this::BtnAddUserActionPerformed);
 
-        btnAbsensi.setText("Absensi");
+        btnAbsensi.setText("Riwayat Absensi");
         btnAbsensi.addActionListener(this::btnAbsensiActionPerformed);
 
         btnRefresh.setText("REFRESH");
         btnRefresh.addActionListener(this::btnRefreshActionPerformed);
+
+        Absen.setText("Absen");
+        Absen.addActionListener(this::AbsenActionPerformed);
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -115,8 +119,10 @@ public class AdminPage extends javax.swing.JPanel {
                 .addGap(18, 18, 18)
                 .addComponent(btnAbsensi)
                 .addGap(18, 18, 18)
+                .addComponent(Absen)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnRefresh)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -125,7 +131,8 @@ public class AdminPage extends javax.swing.JPanel {
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(BtnAddUser)
                     .addComponent(btnAbsensi)
-                    .addComponent(btnRefresh))
+                    .addComponent(btnRefresh)
+                    .addComponent(Absen))
                 .addContainerGap(8, Short.MAX_VALUE))
         );
 
@@ -322,7 +329,8 @@ public class AdminPage extends javax.swing.JPanel {
                 card.add(new JLabel("Nama: " + k.getNamaLengkap()));
                 card.add(new JLabel("Role: " + k.getRole()));
                 card.add(new JLabel("Username: " + k.getUsername()));
-                card.add(new JLabel("Password: " + k.getPassword()));
+                String masked = k.getPassword().replaceAll(".", "*");
+                card.add(new JLabel("Password: " + masked));
 
                 jPanelKaryawan.add(card);
             }
@@ -431,8 +439,22 @@ public class AdminPage extends javax.swing.JPanel {
 
     }//GEN-LAST:event_btnCariActionPerformed
 
+    private void AbsenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AbsenActionPerformed
+        // Buat instance halaman AttendancePage
+    AttendancePage attendancePage = new AttendancePage();
+
+    // Ambil frame utama tempat panel ini ditampilkan
+    javax.swing.JFrame frame = (javax.swing.JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
+
+    // Ganti konten frame dengan halaman AttendancePage
+    frame.setContentPane(attendancePage);
+    frame.revalidate();
+    frame.repaint();
+    }//GEN-LAST:event_AbsenActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton Absen;
     private javax.swing.JButton BtnAddUser;
     private javax.swing.JButton btnAbsensi;
     private javax.swing.JButton btnCari;

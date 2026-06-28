@@ -4,6 +4,19 @@
  */
 package GUI;
 
+import Object.Karyawan;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+import service.RFIDAbsensiService;
+import service.SessionManager;
+
 /**
  *
  * @author Lenovo
@@ -15,7 +28,10 @@ public class AttendancePage extends javax.swing.JPanel {
      */
     public AttendancePage() {
         initComponents();
+        System.out.println("AttendancePage berhasil dibuat!");
+
     }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -27,25 +43,103 @@ public class AttendancePage extends javax.swing.JPanel {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jPanelAbsen = new javax.swing.JPanel();
+        TapKartu = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
+        jPanelBawah = new javax.swing.JPanel();
 
         jPanel1.setBackground(new java.awt.Color(255, 153, 153));
+
+        jLabel1.setBackground(new java.awt.Color(0, 51, 204));
+        jLabel1.setFont(new java.awt.Font("Tw Cen MT Condensed", 1, 24)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(153, 0, 204));
+        jLabel1.setText("ATTENDANCE PAGE");
+
+        javax.swing.GroupLayout jPanelAbsenLayout = new javax.swing.GroupLayout(jPanelAbsen);
+        jPanelAbsen.setLayout(jPanelAbsenLayout);
+        jPanelAbsenLayout.setHorizontalGroup(
+            jPanelAbsenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        jPanelAbsenLayout.setVerticalGroup(
+            jPanelAbsenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 182, Short.MAX_VALUE)
+        );
+
+        TapKartu.setText("SCAN RFID");
+        TapKartu.addActionListener(this::TapKartuActionPerformed);
+
+        jButton2.setText("REFRESH");
+
+        jButton3.setText("KEMBALI");
+
+        jLabel2.setFont(new java.awt.Font("Tw Cen MT Condensed", 1, 18)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(51, 0, 255));
+        jLabel2.setText("KEHADIRAN HARI INI");
+
+        javax.swing.GroupLayout jPanelBawahLayout = new javax.swing.GroupLayout(jPanelBawah);
+        jPanelBawah.setLayout(jPanelBawahLayout);
+        jPanelBawahLayout.setHorizontalGroup(
+            jPanelBawahLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        jPanelBawahLayout.setVerticalGroup(
+            jPanelBawahLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 164, Short.MAX_VALUE)
+        );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 687, Short.MAX_VALUE)
+            .addComponent(jPanelAbsen, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanelBawah, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(223, 223, 223)
+                        .addComponent(TapKartu)
+                        .addGap(230, 230, 230)
+                        .addComponent(jButton2)
+                        .addGap(222, 222, 222)
+                        .addComponent(jButton3))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(23, 23, 23)
+                        .addComponent(jLabel2))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(470, 470, 470)
+                        .addComponent(jLabel1)))
+                .addContainerGap(267, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 402, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(8, 8, 8)
+                .addComponent(jLabel1)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanelAbsen, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(46, 46, 46)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(TapKartu)
+                    .addComponent(jButton2)
+                    .addComponent(jButton3))
+                .addGap(37, 37, 37)
+                .addComponent(jPanelBawah, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(90, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -53,8 +147,37 @@ public class AttendancePage extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void TapKartuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TapKartuActionPerformed
+    System.out.println("Tombol Scan RFID ditekan!");
+                           
+    // Ambil user yang sedang login
+    Karyawan currentUser = SessionManager.getCurrentUser(); // misalnya kamu simpan di Session
+
+    // Pakai UID dari user login sebagai simulasi
+    String uidSimulasi = currentUser.getUidRfid();
+    System.out.println("Simulasi scan dijalankan untuk UID: " + uidSimulasi);
+    
+
+    RFIDAbsensiService rfidService = new RFIDAbsensiService("SIMULASI"); 
+    rfidService.prosesAbsensi(uidSimulasi);
+
+    JOptionPane.showMessageDialog(this,
+        "Simulasi: UID " + uidSimulasi + " dicatat untuk " + currentUser.getNamaLengkap(),
+        "Scan RFID", JOptionPane.INFORMATION_MESSAGE);
+
+
+
+    }//GEN-LAST:event_TapKartuActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton TapKartu;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanelAbsen;
+    private javax.swing.JPanel jPanelBawah;
     // End of variables declaration//GEN-END:variables
 }

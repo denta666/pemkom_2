@@ -75,6 +75,7 @@ public class StaffPage extends javax.swing.JPanel {
         jButton1 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         bntRefresh = new javax.swing.JButton();
+        Absen = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jPanelAbsensi = new javax.swing.JPanel();
@@ -93,6 +94,9 @@ public class StaffPage extends javax.swing.JPanel {
         bntRefresh.setText("Refresh");
         bntRefresh.addActionListener(this::bntRefreshActionPerformed);
 
+        Absen.setText("Absen");
+        Absen.addActionListener(this::AbsenActionPerformed);
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -101,6 +105,8 @@ public class StaffPage extends javax.swing.JPanel {
                 .addGap(18, 18, 18)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(Absen)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(bntRefresh)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton1)
@@ -113,7 +119,8 @@ public class StaffPage extends javax.swing.JPanel {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
                     .addComponent(jLabel1)
-                    .addComponent(bntRefresh))
+                    .addComponent(bntRefresh)
+                    .addComponent(Absen))
                 .addGap(16, 16, 16))
         );
 
@@ -190,15 +197,42 @@ public class StaffPage extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+
+        javax.swing.JFrame parentFrame
+                = (javax.swing.JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
+
+        
+        parentFrame.dispose();
+
+        // Buat frame baru untuk LoginPage (karena LoginPage adalah JPanel)
+        javax.swing.JFrame loginFrame = new javax.swing.JFrame("Login");
+        loginFrame.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
+        loginFrame.setContentPane(new LoginPage()); // LoginPage adalah JPanel
+        loginFrame.pack();
+        loginFrame.setLocationRelativeTo(null);
+        loginFrame.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void bntRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntRefreshActionPerformed
         tampilkanAbsensiSaya(jPanelAbsensi);
     }//GEN-LAST:event_bntRefreshActionPerformed
 
+    private void AbsenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AbsenActionPerformed
+    // Buat instance halaman AttendancePage
+    AttendancePage attendancePage = new AttendancePage();
+
+    // Ambil frame utama tempat panel ini ditampilkan
+    javax.swing.JFrame frame = (javax.swing.JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
+
+    // Ganti konten frame dengan halaman AttendancePage
+    frame.setContentPane(attendancePage);
+    frame.revalidate();
+    frame.repaint();
+    }//GEN-LAST:event_AbsenActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton Absen;
     private javax.swing.JButton bntRefresh;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;

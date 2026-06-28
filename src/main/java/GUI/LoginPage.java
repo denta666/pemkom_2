@@ -132,17 +132,19 @@ public class LoginPage extends javax.swing.JPanel {
 
         String username = jTextField1.getText();
         String password = new String(jPasswordField1.getPassword());
-        String hashedPassword = SecurityUtility.getHash(password, SecurityUtility.SHA_256);
+
 
 
         try {
             KaryawanDAO dao = new KaryawanDAO(MongoManager.getDatabase());
-            Karyawan k = dao.login(username, hashedPassword);
+            Karyawan k = dao.login(username, password);
 
 
             System.out.println("Login sebagai: " + k.getNamaLengkap() + " | ID: " + k.getIdKaryawan());
 
             if (k != null) {
+                
+                service.SessionManager.setCurrentUser(k);
                 String role = k.getRole();
                 JFrame frame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
 
@@ -154,6 +156,8 @@ public class LoginPage extends javax.swing.JPanel {
                     frame.setContentPane(new StaffPage(k.getIdKaryawan())); // kirim ID dari objek Karyawan
                 } else {
                     if (k == null) {
+                        System.out.println("Login gagal: data tidak ditemukan di database.");
+                        
                         JOptionPane.showMessageDialog(this, "Username atau password salah!");
                         return;
                     }

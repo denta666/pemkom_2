@@ -4,7 +4,7 @@
  */
 package GUI;
 
-import Object.KehadiranService;
+import service.KehadiranService;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 

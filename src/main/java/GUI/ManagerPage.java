@@ -11,7 +11,7 @@ package GUI;
 import Object.MongoManager;
 import Object.KehadiranDAO;
 import Object.Kehadiran;
-import Object.KehadiranService;
+import service.KehadiranService;
 import com.mongodb.client.MongoDatabase;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -50,7 +50,6 @@ public class ManagerPage extends javax.swing.JPanel {
             card.add(new JLabel("Jam Masuk: " + a.getJamMasuk()));
             card.add(new JLabel("Status: " + a.getStatus()));
             card.add(new JLabel("Role: " + a.getRole()));
-            
 
             panelContainer.add(card);
         }
@@ -73,6 +72,7 @@ public class ManagerPage extends javax.swing.JPanel {
         txtNama = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         txtTanggal = new javax.swing.JTextField();
+        Absen = new javax.swing.JButton();
         btnRefresh = new javax.swing.JButton();
         jPanelAbsensi = new javax.swing.JPanel();
 
@@ -118,6 +118,9 @@ public class ManagerPage extends javax.swing.JPanel {
 
         jLabel3.setText("Tanggal :");
 
+        Absen.setText("Absen");
+        Absen.addActionListener(this::AbsenActionPerformed);
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
@@ -133,7 +136,9 @@ public class ManagerPage extends javax.swing.JPanel {
                 .addComponent(txtTanggal, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(btnSearch)
-                .addContainerGap(535, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 428, Short.MAX_VALUE)
+                .addComponent(Absen)
+                .addGap(32, 32, 32))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -144,7 +149,8 @@ public class ManagerPage extends javax.swing.JPanel {
                     .addComponent(jLabel2)
                     .addComponent(txtNama, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3)
-                    .addComponent(txtTanggal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtTanggal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(Absen))
                 .addContainerGap(15, Short.MAX_VALUE))
         );
 
@@ -236,8 +242,22 @@ public class ManagerPage extends javax.swing.JPanel {
         loginFrame.setVisible(true);
     }//GEN-LAST:event_btnLogoutActionPerformed
 
+    private void AbsenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AbsenActionPerformed
+        // Buat instance halaman AttendancePage
+        AttendancePage attendancePage = new AttendancePage();
+
+        // Ambil frame utama tempat panel ini ditampilkan
+        javax.swing.JFrame frame = (javax.swing.JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
+
+        // Ganti konten frame dengan halaman AttendancePage
+        frame.setContentPane(attendancePage);
+        frame.revalidate();
+        frame.repaint();
+    }//GEN-LAST:event_AbsenActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton Absen;
     private javax.swing.JButton btnLogout;
     private javax.swing.JButton btnRefresh;
     private javax.swing.JButton btnSearch;

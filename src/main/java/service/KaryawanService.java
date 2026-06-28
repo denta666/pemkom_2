@@ -46,11 +46,12 @@ public class KaryawanService {
 
             // Aksi tombol Detail
             btnDetail.addActionListener(e -> {
-                JOptionPane.showMessageDialog(panelContainer,
+                JOptionPane.showMessageDialog(null,
                         "ID: " + k.getIdKaryawan() + "\n"
                         + "Nama: " + k.getNamaLengkap() + "\n"
                         + "Role: " + k.getRole() + "\n"
-                        + "Username: " + k.getUsername(),
+                        + "Username: " + k.getUsername() + "\n"
+                        + "Password : " + k.getPassword(),
                         "Detail Karyawan", JOptionPane.INFORMATION_MESSAGE);
             });
 

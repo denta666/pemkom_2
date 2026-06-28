@@ -149,7 +149,9 @@
                       <Component id="txtTanggal" min="-2" pref="105" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="btnSearch" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="535" max="32767" attributes="0"/>
+                      <EmptySpace pref="428" max="32767" attributes="0"/>
+                      <Component id="Absen" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -163,6 +165,7 @@
                           <Component id="txtNama" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="txtTanggal" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="Absen" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace pref="15" max="32767" attributes="0"/>
                   </Group>
@@ -191,6 +194,14 @@
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="txtTanggal">
+            </Component>
+            <Component class="javax.swing.JButton" name="Absen">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Absen"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="AbsenActionPerformed"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>

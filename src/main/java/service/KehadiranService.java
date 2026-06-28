@@ -2,12 +2,15 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package Object;
+package service;
 
 /**
  *
  * @author Lenovo
  */
+import Object.Kehadiran;
+import Object.KehadiranDAO;
+import Object.MongoManager;
 import java.awt.*;
 import java.util.List;
 import javax.swing.*;
