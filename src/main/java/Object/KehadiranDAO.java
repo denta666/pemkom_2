@@ -26,7 +26,8 @@ public class KehadiranDAO implements BaseDAO<Kehadiran> {
                 .append("uidRfid", entity.getUidRfid())
                 .append("nama", entity.getNama())
                 .append("tanggal", entity.getTanggal())
-                .append("jamMasuk", entity.getJamMasuk()) 
+                .append("jamMasuk", entity.getJamMasuk())
+                .append("jamKeluar", entity.getJamKeluar())
                 .append("status", entity.getStatus())
                 .append("role", entity.getRole());
         collection.insertOne(doc);
@@ -42,6 +43,7 @@ public class KehadiranDAO implements BaseDAO<Kehadiran> {
                 .append("uidRfid", entity.getUidRfid())
                 .append("nama", entity.getNama())
                 .append("jamMasuk", entity.getJamMasuk())
+                .append("jamKeluar", entity.getJamKeluar())
                 .append("role", entity.getRole()));
 
         collection.updateOne(filterDoc, updateDoc);
@@ -63,7 +65,8 @@ public class KehadiranDAO implements BaseDAO<Kehadiran> {
                     doc.getString("uidRfid"),
                     doc.getString("nama"),
                     doc.getString("tanggal"),
-                    doc.getString("jamMasuk"), 
+                    doc.getString("jamMasuk"),
+                    doc.getString("jamKeluar"),
                     doc.getString("status"),
                     doc.getString("role")
             ));
@@ -82,6 +85,7 @@ public class KehadiranDAO implements BaseDAO<Kehadiran> {
                     doc.getString("nama"),
                     doc.getString("tanggal"),
                     doc.getString("jamMasuk"),
+                    doc.getString("jamKeluar"),
                     doc.getString("status"),
                     doc.getString("role")
             );
@@ -100,6 +104,7 @@ public class KehadiranDAO implements BaseDAO<Kehadiran> {
                     doc.getString("nama"),
                     doc.getString("tanggal"),
                     doc.getString("jamMasuk"),
+                    doc.getString("jamKeluar"),
                     doc.getString("status"),
                     doc.getString("role")
             ));
@@ -129,7 +134,8 @@ public class KehadiranDAO implements BaseDAO<Kehadiran> {
                     doc.getString("uidRfid"),
                     doc.getString("nama"),
                     doc.getString("tanggal"),
-                    doc.getString("jamMasuk"), 
+                    doc.getString("jamMasuk"),
+                    doc.getString("jamKeluar"),
                     doc.getString("status"),
                     doc.getString("role")
             ));
@@ -137,4 +143,39 @@ public class KehadiranDAO implements BaseDAO<Kehadiran> {
 
         return result;
     }
+
+    public Kehadiran findByUidAndTanggal(String uidRfid, String tanggal) {
+        Document filter = new Document("uidRfid", uidRfid)
+                .append("tanggal", tanggal);
+        Document doc = collection.find(filter).first();
+
+        if (doc != null) {
+            return new Kehadiran(
+                    doc.getString("id"),
+                    doc.getString("uidRfid"),
+                    doc.getString("nama"),
+                    doc.getString("tanggal"),
+                    doc.getString("jamMasuk"),
+                    doc.getString("jamKeluar"),
+                    doc.getString("status"),
+                    doc.getString("role")
+            );
+        }
+        return null;
+    }
+
+    public void update(Kehadiran entity) {
+        Document filter = new Document("uidRfid", entity.getUidRfid())
+                .append("tanggal", entity.getTanggal());
+
+        Document updateDoc = new Document("$set", new Document("jamKeluar", entity.getJamKeluar())
+                .append("status", entity.getStatus())
+                .append("uidRfid", entity.getUidRfid())
+                .append("nama", entity.getNama())
+                .append("jamMasuk", entity.getJamMasuk())
+                .append("role", entity.getRole()));
+
+        collection.updateOne(filter, updateDoc);
+    }
+
 }

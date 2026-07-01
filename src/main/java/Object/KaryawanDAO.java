@@ -44,16 +44,17 @@ public class KaryawanDAO implements BaseDAO<Karyawan> {
 
     @Override
     public void update(Bson filter, Karyawan entity) {
-        // Hash password sebelum update
+        // hash password sebelum update
         String hashedPassword = SecurityUtility.getHash(entity.getPassword(), SecurityUtility.SHA_256);
 
-        Document doc = new Document("uidRfid", entity.getUidRfid())
+        Document updateDoc = new Document("$set", new Document("uidRfid", entity.getUidRfid())
                 .append("idKaryawan", entity.getIdKaryawan())
                 .append("namaLengkap", entity.getNamaLengkap())
                 .append("role", entity.getRole())
                 .append("username", entity.getUsername())
-                .append("password", hashedPassword);
-        collection.replaceOne(filter, doc);
+                .append("password", hashedPassword));
+
+        collection.updateOne(filter, updateDoc);
     }
 
     @Override
@@ -183,5 +184,7 @@ public class KaryawanDAO implements BaseDAO<Karyawan> {
         }
         return null;
     }
+    
+
 
 }

@@ -12,7 +12,6 @@ public class Karyawan {
     private String role;      // "KARYAWAN" atau "MANAGER" atau "ADMIN"
     private String username;  // untuk login
     private String password;  // untuk login
-    private String jamMasuk;
 
     public Karyawan() {
     }
@@ -94,13 +93,5 @@ public class Karyawan {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getJamMasuk() {
-        return jamMasuk;
-    }
-
-    public void setJamMasuk(String jamMasuk) {
-        this.jamMasuk = jamMasuk;
     }
 }
