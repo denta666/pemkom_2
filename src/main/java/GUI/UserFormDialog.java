@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package GUI;
 
 import javax.swing.*;
@@ -14,42 +10,94 @@ public class UserFormDialog extends JDialog {
     private boolean saved = false;
 
     public UserFormDialog(JFrame parent) {
-        super(parent, "Tambah/Update User", true);
+        super(parent, "Tambah / Update User", true);
         initComponents();
     }
 
     private void initComponents() {
-        setLayout(new GridLayout(7, 2, 5, 5));
+        // Panel utama dengan padding
+        JPanel panel = new JPanel(new GridBagLayout());
+        panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        panel.setBackground(new Color(240, 248, 255)); // biru muda lembut
 
-        add(new JLabel("ID:"));
-        txtId = new JTextField();
-        add(txtId);
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(8, 8, 8, 8);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        add(new JLabel("Nama:"));
-        txtNama = new JTextField();
-        add(txtNama);
+        Font labelFont = new Font("Segoe UI", Font.BOLD, 13);
 
-        add(new JLabel("Role:"));
+        // Baris 1: ID
+        gbc.gridx = 0; gbc.gridy = 0;
+        JLabel lblId = new JLabel("ID Karyawan:");
+        lblId.setFont(labelFont);
+        panel.add(lblId, gbc);
+        gbc.gridx = 1;
+        txtId = new JTextField(15);
+        panel.add(txtId, gbc);
+
+        // Baris 2: Nama
+        gbc.gridx = 0; gbc.gridy++;
+        JLabel lblNama = new JLabel("Nama Lengkap:");
+        lblNama.setFont(labelFont);
+        panel.add(lblNama, gbc);
+        gbc.gridx = 1;
+        txtNama = new JTextField(15);
+        panel.add(txtNama, gbc);
+
+        // Baris 3: Role
+        gbc.gridx = 0; gbc.gridy++;
+        JLabel lblRole = new JLabel("Role:");
+        lblRole.setFont(labelFont);
+        panel.add(lblRole, gbc);
+        gbc.gridx = 1;
         cmbRole = new JComboBox<>(new String[]{"ADMIN", "MANAGER", "STAFF"});
-        add(cmbRole);
+        panel.add(cmbRole, gbc);
 
-        add(new JLabel("Username:"));
-        txtUsername = new JTextField();
-        add(txtUsername);
+        // Baris 4: Username
+        gbc.gridx = 0; gbc.gridy++;
+        JLabel lblUsername = new JLabel("Username:");
+        lblUsername.setFont(labelFont);
+        panel.add(lblUsername, gbc);
+        gbc.gridx = 1;
+        txtUsername = new JTextField(15);
+        panel.add(txtUsername, gbc);
 
-        add(new JLabel("Password:"));
-        txtPassword = new JTextField();
-        add(txtPassword);
+        // Baris 5: Password
+        gbc.gridx = 0; gbc.gridy++;
+        JLabel lblPassword = new JLabel("Password:");
+        lblPassword.setFont(labelFont);
+        panel.add(lblPassword, gbc);
+        gbc.gridx = 1;
+        txtPassword = new JTextField(15);
+        panel.add(txtPassword, gbc);
 
-        add(new JLabel("UID RFID:"));
-        txtUidRfid = new JTextField();
-        add(txtUidRfid);
+        // Baris 6: UID RFID
+        gbc.gridx = 0; gbc.gridy++;
+        JLabel lblUid = new JLabel("UID RFID:");
+        lblUid.setFont(labelFont);
+        panel.add(lblUid, gbc);
+        gbc.gridx = 1;
+        txtUidRfid = new JTextField(15);
+        panel.add(txtUidRfid, gbc);
 
-        btnSave = new JButton("Simpan");
-        btnCancel = new JButton("Batal");
+        // Baris 7: Tombol
+        gbc.gridx = 0; gbc.gridy++;
+        gbc.gridwidth = 2;
+        gbc.anchor = GridBagConstraints.CENTER;
 
-        add(btnSave);
-        add(btnCancel);
+        btnSave = new JButton("💾 Simpan");
+        btnCancel = new JButton("❌ Batal");
+
+        btnSave.setBackground(new Color(100, 149, 237));
+        btnSave.setForeground(Color.WHITE);
+        btnCancel.setBackground(new Color(220, 20, 60));
+        btnCancel.setForeground(Color.WHITE);
+
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setBackground(panel.getBackground());
+        buttonPanel.add(btnSave);
+        buttonPanel.add(btnCancel);
+        panel.add(buttonPanel, gbc);
 
         btnSave.addActionListener(e -> {
             saved = true;
@@ -58,6 +106,7 @@ public class UserFormDialog extends JDialog {
 
         btnCancel.addActionListener(e -> dispose());
 
+        add(panel);
         pack();
         setLocationRelativeTo(getParent());
     }

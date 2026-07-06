@@ -9,6 +9,7 @@ import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class KehadiranDAO implements BaseDAO<Kehadiran> {
@@ -110,6 +111,23 @@ public class KehadiranDAO implements BaseDAO<Kehadiran> {
             ));
         }
         return list;
+    }
+
+    // 🔍 Cari berdasarkan keyword (nama/id)
+    public List<Kehadiran> findByKeyword(String keyword) {
+
+        Document filter = new Document(
+                "$or", List.of(
+                        new Document("nama",
+                                new Document("$regex", keyword)
+                                        .append("$options", "i")),
+                        new Document("id",
+                                new Document("$regex", keyword)
+                                        .append("$options", "i"))
+                )
+        );
+
+        return findMany(filter);
     }
 
     // 🔍 Pencarian dengan filter tanggal + keyword (nama/id)

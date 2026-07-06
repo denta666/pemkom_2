@@ -142,7 +142,7 @@
                       <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
                       <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="txtNama" min="-2" pref="106" max="-2" attributes="0"/>
+                      <Component id="txtCariNama" min="-2" pref="106" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
@@ -162,7 +162,7 @@
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="btnSearch" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="txtNama" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="txtCariNama" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="txtTanggal" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="Absen" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -186,7 +186,10 @@
                 <Property name="text" type="java.lang.String" value="Name :"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JTextField" name="txtNama">
+            <Component class="javax.swing.JTextField" name="txtCariNama">
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtCariNamaActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel3">
               <Properties>
@@ -194,6 +197,9 @@
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="txtTanggal">
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtTanggalActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JButton" name="Absen">
               <Properties>

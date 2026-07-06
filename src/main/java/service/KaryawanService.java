@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package service;
 
 import Object.Karyawan;
@@ -11,6 +7,7 @@ import java.awt.*;
 import java.util.List;
 import javax.swing.*;
 import org.bson.Document;
+import utility.WrapLayout;
 
 public class KaryawanService {
 
@@ -21,80 +18,325 @@ public class KaryawanService {
     }
 
     public void tampilkanSemuaKaryawan(JPanel panelContainer) {
+
         panelContainer.removeAll();
-        panelContainer.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 10));
+        panelContainer.setLayout(new WrapLayout(FlowLayout.LEFT, 15, 15));
 
         List<Karyawan> list = dao.findAll();
 
         for (Karyawan k : list) {
-            JPanel card = new JPanel();
-            card.setBackground(new Color(255, 204, 153));
-            card.setPreferredSize(new Dimension(280, 130));
-            card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
 
-            JLabel lblNama = new JLabel("Nama: " + k.getNamaLengkap());
-            JLabel lblRole = new JLabel("Role: " + k.getRole());
-            JLabel lblUser = new JLabel("Username: " + k.getUsername());
-            JLabel lblPass = new JLabel("Password: " + k.getPassword());
+            // ================= CARD ===================
+            JPanel card = new JPanel(new BorderLayout(10, 10));
+            card.setPreferredSize(new Dimension(310, 170));
+            card.setBackground(Color.WHITE);
 
-            // Panel tombol di bawah
-            JPanel panelButton = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 5));
+            card.setBorder(BorderFactory.createCompoundBorder(
+                    BorderFactory.createLineBorder(new Color(210, 210, 210), 1),
+                    BorderFactory.createEmptyBorder(10, 10, 10, 10)
+            ));
+
+            // ================= HEADER =================
+            JLabel lblNama = new JLabel(k.getNamaLengkap());
+            lblNama.setFont(new Font("Segoe UI", Font.BOLD, 18));
+
+            JLabel lblRole = new JLabel(k.getRole());
+            lblRole.setFont(new Font("Segoe UI", Font.BOLD, 12));
+
+            switch (k.getRole().toUpperCase()) {
+                case "ADMIN":
+                    lblRole.setForeground(new Color(220, 53, 69));
+                    break;
+
+                case "MANAGER":
+                    lblRole.setForeground(new Color(13, 110, 253));
+                    break;
+
+                default:
+                    lblRole.setForeground(new Color(25, 135, 84));
+                    break;
+            }
+
+            JPanel header = new JPanel(new BorderLayout());
+            header.setOpaque(false);
+
+            header.add(lblNama, BorderLayout.WEST);
+            header.add(lblRole, BorderLayout.EAST);
+
+            // ================= BODY =================
+            JLabel lblUser = new JLabel("Username : " + k.getUsername());
+            lblUser.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+
+            JLabel lblPass = new JLabel("Password : ********");
+            lblPass.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+
+            JPanel body = new JPanel();
+            body.setOpaque(false);
+            body.setLayout(new BoxLayout(body, BoxLayout.Y_AXIS));
+
+            body.add(Box.createVerticalStrut(8));
+            body.add(lblUser);
+            body.add(Box.createVerticalStrut(5));
+            body.add(lblPass);
+
+            // ================= BUTTON =================
+            JPanel panelButton = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 5));
+            panelButton.setOpaque(false);
 
             JButton btnDetail = new JButton("Detail");
             JButton btnUpdate = new JButton("Update");
             JButton btnDelete = new JButton("Delete");
 
-            // Aksi tombol Detail
+            Dimension size = new Dimension(85, 32);
+
+            btnDetail.setPreferredSize(size);
+            btnUpdate.setPreferredSize(size);
+            btnDelete.setPreferredSize(size);
+
+            btnDetail.setFocusPainted(false);
+            btnUpdate.setFocusPainted(false);
+            btnDelete.setFocusPainted(false);
+
+            // ================= DETAIL =================
             btnDetail.addActionListener(e -> {
-                JOptionPane.showMessageDialog(null,
-                        "ID: " + k.getIdKaryawan() + "\n"
-                        + "Nama: " + k.getNamaLengkap() + "\n"
-                        + "Role: " + k.getRole() + "\n"
-                        + "Username: " + k.getUsername() + "\n"
-                        + "Password : " + k.getPassword(),
-                        "Detail Karyawan", JOptionPane.INFORMATION_MESSAGE);
+
+                JOptionPane.showMessageDialog(
+                        panelContainer,
+                        "ID : " + k.getIdKaryawan()
+                        + "\nNama : " + k.getNamaLengkap()
+                        + "\nRole : " + k.getRole()
+                        + "\nUsername : " + k.getUsername(),
+                        "Detail Karyawan",
+                        JOptionPane.INFORMATION_MESSAGE
+                );
+
             });
 
-            // 🔹 Update
+            // ================= UPDATE =================
             btnUpdate.addActionListener(e -> {
-                String newUsername = JOptionPane.showInputDialog(panelContainer,
-                        "Masukkan username baru:", k.getUsername());
-                String newPassword = JOptionPane.showInputDialog(panelContainer,
-                        "Masukkan password baru:", k.getPassword());
-                String newRole = JOptionPane.showInputDialog(panelContainer,
-                        "Masukkan role baru:", k.getRole());
 
-                if (newUsername != null && newPassword != null && newRole != null) {
+                String newUsername = JOptionPane.showInputDialog(
+                        panelContainer,
+                        "Masukkan Username",
+                        k.getUsername());
+
+                String newPassword = JOptionPane.showInputDialog(
+                        panelContainer,
+                        "Masukkan Password",
+                        k.getPassword());
+
+                String newRole = JOptionPane.showInputDialog(
+                        panelContainer,
+                        "Masukkan Role",
+                        k.getRole());
+
+                if (newUsername != null
+                        && newPassword != null
+                        && newRole != null) {
+
                     k.setUsername(newUsername);
                     k.setPassword(newPassword);
                     k.setRole(newRole);
-                    dao.update(new Document("idKaryawan", k.getIdKaryawan()), k);
-                    JOptionPane.showMessageDialog(panelContainer, "Data berhasil diperbarui!");
-                    tampilkanSemuaKaryawan(panelContainer); // refresh otomatis
+
+                    dao.update(
+                            new Document("idKaryawan", k.getIdKaryawan()),
+                            k
+                    );
+
+                    JOptionPane.showMessageDialog(
+                            panelContainer,
+                            "Data berhasil diperbarui!"
+                    );
+
+                    tampilkanSemuaKaryawan(panelContainer);
                 }
+
             });
 
-            // 🔹 Delete
+            // ================= DELETE =================
             btnDelete.addActionListener(e -> {
-                int confirm = JOptionPane.showConfirmDialog(panelContainer,
-                        "Yakin ingin menghapus user " + k.getNamaLengkap() + "?",
-                        "Konfirmasi Hapus", JOptionPane.YES_NO_OPTION);
+
+                int confirm = JOptionPane.showConfirmDialog(
+                        panelContainer,
+                        "Yakin ingin menghapus "
+                        + k.getNamaLengkap() + "?",
+                        "Konfirmasi",
+                        JOptionPane.YES_NO_OPTION);
+
                 if (confirm == JOptionPane.YES_OPTION) {
-                    dao.delete(new Document("idKaryawan", k.getIdKaryawan()));
-                    JOptionPane.showMessageDialog(panelContainer, "User berhasil dihapus!");
-                    tampilkanSemuaKaryawan(panelContainer); // refresh otomatis
+
+                    dao.delete(
+                            new Document("idKaryawan",
+                                    k.getIdKaryawan()));
+
+                    JOptionPane.showMessageDialog(
+                            panelContainer,
+                            "User berhasil dihapus!");
+
+                    tampilkanSemuaKaryawan(panelContainer);
                 }
+
             });
 
             panelButton.add(btnDetail);
             panelButton.add(btnUpdate);
             panelButton.add(btnDelete);
 
-            card.add(lblNama);
-            card.add(lblRole);
-            card.add(lblUser);
-            card.add(lblPass);
-            card.add(panelButton);
+            // ================= MASUKKAN KE CARD =================
+            card.add(header, BorderLayout.NORTH);
+            card.add(body, BorderLayout.CENTER);
+            card.add(panelButton, BorderLayout.SOUTH);
+
+            panelContainer.add(card);
+
+        }
+
+        panelContainer.revalidate();
+        panelContainer.repaint();
+
+    }
+
+    private void tampilkanCard(JPanel panelContainer, List<Karyawan> list) {
+
+        panelContainer.removeAll();
+        panelContainer.setLayout(new WrapLayout(FlowLayout.LEFT, 15, 15));
+
+        if (list.isEmpty()) {
+            JLabel lblKosong = new JLabel("Data tidak ditemukan.");
+            lblKosong.setFont(new Font("Segoe UI", Font.BOLD, 14));
+            lblKosong.setForeground(Color.RED);
+            panelContainer.add(lblKosong);
+
+            panelContainer.revalidate();
+            panelContainer.repaint();
+            return;
+        }
+
+        for (Karyawan k : list) {
+
+            JPanel card = new JPanel(new BorderLayout(10, 10));
+            card.setPreferredSize(new Dimension(310, 170));
+            card.setBackground(Color.WHITE);
+
+            card.setBorder(BorderFactory.createCompoundBorder(
+                    BorderFactory.createLineBorder(new Color(210, 210, 210), 1),
+                    BorderFactory.createEmptyBorder(10, 10, 10, 10)
+            ));
+
+            // HEADER
+            JLabel lblNama = new JLabel(k.getNamaLengkap());
+            lblNama.setFont(new Font("Segoe UI", Font.BOLD, 18));
+
+            JLabel lblRole = new JLabel(k.getRole());
+            lblRole.setFont(new Font("Segoe UI", Font.BOLD, 12));
+
+            switch (k.getRole().toUpperCase()) {
+                case "ADMIN":
+                    lblRole.setForeground(new Color(220, 53, 69));
+                    break;
+                case "MANAGER":
+                    lblRole.setForeground(new Color(13, 110, 253));
+                    break;
+                default:
+                    lblRole.setForeground(new Color(25, 135, 84));
+                    break;
+            }
+
+            JPanel header = new JPanel(new BorderLayout());
+            header.setOpaque(false);
+            header.add(lblNama, BorderLayout.WEST);
+            header.add(lblRole, BorderLayout.EAST);
+
+            // BODY
+            JLabel lblUser = new JLabel("Username : " + k.getUsername());
+            JLabel lblPass = new JLabel("Password : ********");
+
+            JPanel body = new JPanel();
+            body.setOpaque(false);
+            body.setLayout(new BoxLayout(body, BoxLayout.Y_AXIS));
+            body.add(lblUser);
+            body.add(Box.createVerticalStrut(5));
+            body.add(lblPass);
+
+            // BUTTON
+            JPanel panelButton = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 5));
+            panelButton.setOpaque(false);
+
+            JButton btnDetail = new JButton("Detail");
+            JButton btnUpdate = new JButton("Update");
+            JButton btnDelete = new JButton("Delete");
+
+            panelButton.add(btnDetail);
+            panelButton.add(btnUpdate);
+            panelButton.add(btnDelete);
+
+            // DETAIL
+            btnDetail.addActionListener(e -> {
+                JOptionPane.showMessageDialog(panelContainer,
+                        "ID : " + k.getIdKaryawan()
+                        + "\nNama : " + k.getNamaLengkap()
+                        + "\nRole : " + k.getRole()
+                        + "\nUsername : " + k.getUsername(),
+                        "Detail Karyawan",
+                        JOptionPane.INFORMATION_MESSAGE);
+            });
+
+            // UPDATE
+            btnUpdate.addActionListener(e -> {
+
+                String newUsername = JOptionPane.showInputDialog(
+                        panelContainer,
+                        "Masukkan Username",
+                        k.getUsername());
+
+                String newPassword = JOptionPane.showInputDialog(
+                        panelContainer,
+                        "Masukkan Password",
+                        k.getPassword());
+
+                String newRole = JOptionPane.showInputDialog(
+                        panelContainer,
+                        "Masukkan Role",
+                        k.getRole());
+
+                if (newUsername != null && newPassword != null && newRole != null) {
+
+                    k.setUsername(newUsername);
+                    k.setPassword(newPassword);
+                    k.setRole(newRole);
+
+                    dao.update(new Document("idKaryawan", k.getIdKaryawan()), k);
+
+                    JOptionPane.showMessageDialog(panelContainer,
+                            "Data berhasil diperbarui!");
+
+                    tampilkanSemuaKaryawan(panelContainer);
+                }
+            });
+
+            // DELETE
+            btnDelete.addActionListener(e -> {
+
+                int confirm = JOptionPane.showConfirmDialog(
+                        panelContainer,
+                        "Yakin ingin menghapus " + k.getNamaLengkap() + "?",
+                        "Konfirmasi",
+                        JOptionPane.YES_NO_OPTION);
+
+                if (confirm == JOptionPane.YES_OPTION) {
+
+                    dao.delete(new Document("idKaryawan", k.getIdKaryawan()));
+
+                    JOptionPane.showMessageDialog(panelContainer,
+                            "Data berhasil dihapus!");
+
+                    tampilkanSemuaKaryawan(panelContainer);
+                }
+            });
+
+            card.add(header, BorderLayout.NORTH);
+            card.add(body, BorderLayout.CENTER);
+            card.add(panelButton, BorderLayout.SOUTH);
 
             panelContainer.add(card);
         }
@@ -102,4 +344,10 @@ public class KaryawanService {
         panelContainer.revalidate();
         panelContainer.repaint();
     }
+
+    public void tampilkanHasilPencarian(JPanel panelContainer, String keyword) {
+        List<Karyawan> list = dao.findByKeyword(keyword);
+        tampilkanCard(panelContainer, list);
+    }
+
 }

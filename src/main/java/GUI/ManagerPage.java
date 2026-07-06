@@ -31,31 +31,8 @@ public class ManagerPage extends javax.swing.JPanel {
         initComponents();
         btnRefreshActionPerformed(null);
         dao = new KehadiranDAO(MongoManager.getDatabase());
-        // panggil load awal
-    }
-
-    public void tampilkanSemuaAbsensi(JPanel panelContainer) {
-        panelContainer.removeAll();
-        panelContainer.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 10));
-
-        List<Kehadiran> list = dao.findAll();
-        for (Kehadiran a : list) {
-            JPanel card = new JPanel();
-            card.setBackground(new Color(255, 204, 153));
-            card.setPreferredSize(new Dimension(280, 130));
-            card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
-
-            card.add(new JLabel("Nama: " + a.getNama()));
-            card.add(new JLabel("Tanggal: " + a.getTanggal()));
-            card.add(new JLabel("Jam Masuk: " + a.getJamMasuk()));
-            card.add(new JLabel("Status: " + a.getStatus()));
-            card.add(new JLabel("Role: " + a.getRole()));
-
-            panelContainer.add(card);
-        }
-
-        panelContainer.revalidate();
-        panelContainer.repaint();
+        KehadiranService service = new KehadiranService();
+        
     }
 
     @SuppressWarnings("unchecked")
@@ -69,7 +46,7 @@ public class ManagerPage extends javax.swing.JPanel {
         jPanel4 = new javax.swing.JPanel();
         btnSearch = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
-        txtNama = new javax.swing.JTextField();
+        txtCariNama = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         txtTanggal = new javax.swing.JTextField();
         Absen = new javax.swing.JButton();
@@ -116,7 +93,11 @@ public class ManagerPage extends javax.swing.JPanel {
 
         jLabel2.setText("Name :");
 
+        txtCariNama.addActionListener(this::txtCariNamaActionPerformed);
+
         jLabel3.setText("Tanggal :");
+
+        txtTanggal.addActionListener(this::txtTanggalActionPerformed);
 
         Absen.setText("Absen");
         Absen.addActionListener(this::AbsenActionPerformed);
@@ -129,7 +110,7 @@ public class ManagerPage extends javax.swing.JPanel {
                 .addGap(15, 15, 15)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtNama, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtCariNama, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -147,7 +128,7 @@ public class ManagerPage extends javax.swing.JPanel {
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnSearch)
                     .addComponent(jLabel2)
-                    .addComponent(txtNama, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtCariNama, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3)
                     .addComponent(txtTanggal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(Absen))
@@ -222,6 +203,17 @@ public class ManagerPage extends javax.swing.JPanel {
 
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
 
+        String keyword = txtCariNama.getText().trim();
+
+        JOptionPane.showMessageDialog(this, keyword);
+
+        if (keyword.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Masukkan nama terlebih dahulu!");
+            return;
+        }
+        KehadiranService service = new KehadiranService();
+        service.tampilkanHasilPencarian(jPanelAbsensi, keyword);
+
     }//GEN-LAST:event_btnSearchActionPerformed
 
     private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
@@ -255,6 +247,14 @@ public class ManagerPage extends javax.swing.JPanel {
         frame.repaint();
     }//GEN-LAST:event_AbsenActionPerformed
 
+    private void txtTanggalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTanggalActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtTanggalActionPerformed
+
+    private void txtCariNamaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCariNamaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtCariNamaActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Absen;
@@ -268,7 +268,7 @@ public class ManagerPage extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanelAbsensi;
     private javax.swing.JLabel lblHeader;
-    private javax.swing.JTextField txtNama;
+    private javax.swing.JTextField txtCariNama;
     private javax.swing.JTextField txtTanggal;
     // End of variables declaration//GEN-END:variables
 }

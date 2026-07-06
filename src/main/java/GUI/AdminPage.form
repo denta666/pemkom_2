@@ -245,9 +245,9 @@
                           <EmptySpace min="-2" pref="16" max="-2" attributes="0"/>
                           <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="btnCariNama" min="-2" pref="90" max="-2" attributes="0"/>
+                          <Component id="BtnCariNama" min="-2" pref="90" max="-2" attributes="0"/>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                          <Component id="btnCari" min="-2" max="-2" attributes="0"/>
+                          <Component id="BtnCari" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="32767" attributes="0"/>
                       </Group>
                   </Group>
@@ -258,8 +258,8 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="btnCariNama" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="btnCari" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="BtnCariNama" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="BtnCari" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="32767" attributes="0"/>
                       </Group>
@@ -272,17 +272,17 @@
                     <Property name="text" type="java.lang.String" value="Nama : "/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JTextField" name="btnCariNama">
+                <Component class="javax.swing.JTextField" name="BtnCariNama">
                   <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnCariNamaActionPerformed"/>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="BtnCariNamaActionPerformed"/>
                   </Events>
                 </Component>
-                <Component class="javax.swing.JButton" name="btnCari">
+                <Component class="javax.swing.JButton" name="BtnCari">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="CARI"/>
                   </Properties>
                   <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnCariActionPerformed"/>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="BtnCariActionPerformed"/>
                   </Events>
                 </Component>
               </SubComponents>

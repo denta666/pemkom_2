@@ -27,13 +27,7 @@ public class AdminPage extends javax.swing.JPanel {
      */
     public AdminPage() {
         initComponents();
-        btnAbsensi = new JButton("Absensi");
-        btnAbsensi.addActionListener(e -> {
-            JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
-            frame.setContentPane(new AdminAbsensiPage()); // ganti ke halaman AdminAbsensiPage
-            frame.revalidate();
-            frame.repaint();
-        });
+        btnRefreshActionPerformed(null);
 
     }
 
@@ -59,8 +53,8 @@ public class AdminPage extends javax.swing.JPanel {
         jLabel2 = new javax.swing.JLabel();
         jPanel5 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
-        btnCariNama = new javax.swing.JTextField();
-        btnCari = new javax.swing.JButton();
+        BtnCariNama = new javax.swing.JTextField();
+        BtnCari = new javax.swing.JButton();
         jPanelKaryawan = new javax.swing.JPanel();
 
         jPanel1.setBackground(new java.awt.Color(255, 153, 153));
@@ -140,10 +134,10 @@ public class AdminPage extends javax.swing.JPanel {
 
         jLabel4.setText("Nama : ");
 
-        btnCariNama.addActionListener(this::btnCariNamaActionPerformed);
+        BtnCariNama.addActionListener(this::BtnCariNamaActionPerformed);
 
-        btnCari.setText("CARI");
-        btnCari.addActionListener(this::btnCariActionPerformed);
+        BtnCari.setText("CARI");
+        BtnCari.addActionListener(this::BtnCariActionPerformed);
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -153,9 +147,9 @@ public class AdminPage extends javax.swing.JPanel {
                 .addGap(16, 16, 16)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnCariNama, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(BtnCariNama, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnCari)
+                .addComponent(BtnCari)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
@@ -164,8 +158,8 @@ public class AdminPage extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(btnCariNama, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnCari))
+                    .addComponent(BtnCariNama, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(BtnCari))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -300,9 +294,9 @@ public class AdminPage extends javax.swing.JPanel {
 
     }//GEN-LAST:event_btnAbsensiActionPerformed
 
-    private void btnCariNamaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCariNamaActionPerformed
+    private void BtnCariNamaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnCariNamaActionPerformed
 
-        String keyword = btnCariNama.getText().trim(); // pastikan ini JTextField
+        String keyword = BtnCariNama.getText().trim(); // pastikan ini JTextField
         jPanelKaryawan.removeAll(); // nama panel sesuai di desain
 
         if (keyword.isEmpty()) {
@@ -340,104 +334,23 @@ public class AdminPage extends javax.swing.JPanel {
         jPanelKaryawan.repaint();
 
 
-    }//GEN-LAST:event_btnCariNamaActionPerformed
+    }//GEN-LAST:event_BtnCariNamaActionPerformed
 
-    private void btnCariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCariActionPerformed
-        jPanelKaryawan.setLayout(new FlowLayout(FlowLayout.LEFT, 15, 15));
+    private void BtnCariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnCariActionPerformed
 
-        String keyword = btnCariNama.getText().trim();
-        jPanelKaryawan.removeAll();
+    String keyword = BtnCariNama.getText().trim();
 
-        if (keyword.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Masukkan nama atau ID terlebih dahulu!");
-            return;
-        }
+    if (keyword.isEmpty()) {
+        JOptionPane.showMessageDialog(this,
+                "Masukkan nama atau ID terlebih dahulu!");
+        return;
+    }
 
-        KaryawanDAO dao = new KaryawanDAO(MongoManager.getDatabase());
-        List<Karyawan> hasil = dao.findByKeyword(keyword);
+    KaryawanService service = new KaryawanService();
+    service.tampilkanHasilPencarian(jPanelKaryawan, keyword);
 
-        if (hasil.isEmpty()) {
-            JLabel lblKosong = new JLabel("Data tidak ditemukan.");
-            lblKosong.setFont(new Font("Arial", Font.BOLD, 14));
-            lblKosong.setForeground(Color.RED);
-            jPanelKaryawan.add(lblKosong);
-        } else {
-            for (Karyawan k : hasil) {
-                JPanel card = new JPanel();
-                card.setLayout(new BorderLayout());
-                card.setBackground(new Color(255, 204, 153));
-                card.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
-                card.setPreferredSize(new Dimension(280, 130));
 
-                // Bagian info karyawan
-                JPanel infoPanel = new JPanel(new GridLayout(0, 1));
-                infoPanel.setOpaque(false);
-                infoPanel.add(new JLabel("Nama: " + k.getNamaLengkap()));
-                infoPanel.add(new JLabel("Role: " + k.getRole()));
-                infoPanel.add(new JLabel("Username: " + k.getUsername()));
-                infoPanel.add(new JLabel("Password: " + k.getPassword()));
-                card.add(infoPanel, BorderLayout.CENTER);
-
-                // Bagian tombol CRUD
-                JButton btnDetail = new JButton("Detail");
-                JButton btnUpdate = new JButton("Update");
-                JButton btnDelete = new JButton("Delete");
-
-                JPanel btnPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-                btnPanel.setOpaque(false);
-                btnPanel.add(btnDetail);
-                btnPanel.add(btnUpdate);
-                btnPanel.add(btnDelete);
-                card.add(btnPanel, BorderLayout.SOUTH);
-
-                // 🔹 Aksi tombol Detail
-                btnDetail.addActionListener(e -> {
-                    JOptionPane.showMessageDialog(this,
-                            "Detail Karyawan:\nNama: " + k.getNamaLengkap()
-                            + "\nRole: " + k.getRole()
-                            + "\nUsername: " + k.getUsername()
-                            + "\nPassword: " + k.getPassword());
-                });
-
-                // 🔹 Aksi tombol Update (username, password, role)
-                btnUpdate.addActionListener(e -> {
-                    String newUsername = JOptionPane.showInputDialog(this,
-                            "Masukkan username baru:", k.getUsername());
-                    String newPassword = JOptionPane.showInputDialog(this,
-                            "Masukkan password baru:", k.getPassword());
-                    String newRole = JOptionPane.showInputDialog(this,
-                            "Masukkan role baru:", k.getRole());
-
-                    if (newUsername != null && newPassword != null && newRole != null) {
-                        k.setUsername(newUsername);
-                        k.setPassword(newPassword);
-                        k.setRole(newRole);
-                        dao.update(new Document("idKaryawan", k.getIdKaryawan()), k);
-                        JOptionPane.showMessageDialog(this, "Data berhasil diperbarui!");
-                        btnRefreshActionPerformed(evt);
-                    }
-                });
-
-                // 🔹 Aksi tombol Delete
-                btnDelete.addActionListener(e -> {
-                    int confirm = JOptionPane.showConfirmDialog(this,
-                            "Hapus " + k.getNamaLengkap() + "?", "Konfirmasi", JOptionPane.YES_NO_OPTION);
-                    if (confirm == JOptionPane.YES_OPTION) {
-                        dao.delete(new Document("idKaryawan", k.getIdKaryawan()));
-                        JOptionPane.showMessageDialog(this, "Data berhasil dihapus!");
-                        btnRefreshActionPerformed(evt);
-                    }
-                });
-
-                jPanelKaryawan.add(card);
-            }
-
-        }
-
-        jPanelKaryawan.revalidate();
-        jPanelKaryawan.repaint();
-
-    }//GEN-LAST:event_btnCariActionPerformed
+    }//GEN-LAST:event_BtnCariActionPerformed
 
     private void AbsenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AbsenActionPerformed
         // Buat instance halaman AttendancePage
@@ -456,9 +369,9 @@ public class AdminPage extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Absen;
     private javax.swing.JButton BtnAddUser;
+    private javax.swing.JButton BtnCari;
+    private javax.swing.JTextField BtnCariNama;
     private javax.swing.JButton btnAbsensi;
-    private javax.swing.JButton btnCari;
-    private javax.swing.JTextField btnCariNama;
     private javax.swing.JButton btnLogout;
     private javax.swing.JButton btnRefresh;
     private javax.swing.JLabel jLabel1;
