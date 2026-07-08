@@ -8,6 +8,7 @@ import java.util.List;
 import javax.swing.*;
 import org.bson.Document;
 import utility.WrapLayout;
+import utility.SecurityUtility;
 
 public class KaryawanService {
 
@@ -28,7 +29,7 @@ public class KaryawanService {
 
             // ================= CARD ===================
             JPanel card = new JPanel(new BorderLayout(10, 10));
-            card.setPreferredSize(new Dimension(310, 170));
+            card.setPreferredSize(new Dimension(310, 190));
             card.setBackground(Color.WHITE);
 
             card.setBorder(BorderFactory.createCompoundBorder(
@@ -70,6 +71,16 @@ public class KaryawanService {
             JLabel lblPass = new JLabel("Password : ********");
             lblPass.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 
+            String uidTampil;
+            try {
+                uidTampil = SecurityUtility.decrypt(k.getUidRfid());
+            } catch (Exception e) {
+                uidTampil = k.getUidRfid();
+            }
+
+            JLabel lblUid = new JLabel("UID RFID : " + (uidTampil != null ? uidTampil : "-"));
+            lblUid.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+
             JPanel body = new JPanel();
             body.setOpaque(false);
             body.setLayout(new BoxLayout(body, BoxLayout.Y_AXIS));
@@ -78,6 +89,8 @@ public class KaryawanService {
             body.add(lblUser);
             body.add(Box.createVerticalStrut(5));
             body.add(lblPass);
+            body.add(Box.createVerticalStrut(5));
+            body.add(lblUid);
 
             // ================= BUTTON =================
             JPanel panelButton = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 5));
@@ -100,12 +113,20 @@ public class KaryawanService {
             // ================= DETAIL =================
             btnDetail.addActionListener(e -> {
 
+                String uidDetail;
+                try {
+                    uidDetail = SecurityUtility.decrypt(k.getUidRfid());
+                } catch (Exception ex) {
+                    uidDetail = k.getUidRfid();
+                }
+
                 JOptionPane.showMessageDialog(
                         panelContainer,
                         "ID : " + k.getIdKaryawan()
                         + "\nNama : " + k.getNamaLengkap()
                         + "\nRole : " + k.getRole()
-                        + "\nUsername : " + k.getUsername(),
+                        + "\nUsername : " + k.getUsername()
+                        + "\nUID RFID : " + (uidDetail != null ? uidDetail : "-"),
                         "Detail Karyawan",
                         JOptionPane.INFORMATION_MESSAGE
                 );
@@ -215,7 +236,7 @@ public class KaryawanService {
         for (Karyawan k : list) {
 
             JPanel card = new JPanel(new BorderLayout(10, 10));
-            card.setPreferredSize(new Dimension(310, 170));
+            card.setPreferredSize(new Dimension(310, 190));
             card.setBackground(Color.WHITE);
 
             card.setBorder(BorderFactory.createCompoundBorder(
@@ -251,12 +272,22 @@ public class KaryawanService {
             JLabel lblUser = new JLabel("Username : " + k.getUsername());
             JLabel lblPass = new JLabel("Password : ********");
 
+            String uidTampil;
+            try {
+                uidTampil = SecurityUtility.decrypt(k.getUidRfid());
+            } catch (Exception e) {
+                uidTampil = k.getUidRfid();
+            }
+            JLabel lblUid = new JLabel("UID RFID : " + (uidTampil != null ? uidTampil : "-"));
+
             JPanel body = new JPanel();
             body.setOpaque(false);
             body.setLayout(new BoxLayout(body, BoxLayout.Y_AXIS));
             body.add(lblUser);
             body.add(Box.createVerticalStrut(5));
             body.add(lblPass);
+            body.add(Box.createVerticalStrut(5));
+            body.add(lblUid);
 
             // BUTTON
             JPanel panelButton = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 5));
@@ -272,11 +303,20 @@ public class KaryawanService {
 
             // DETAIL
             btnDetail.addActionListener(e -> {
+
+                String uidDetail;
+                try {
+                    uidDetail = SecurityUtility.decrypt(k.getUidRfid());
+                } catch (Exception ex) {
+                    uidDetail = k.getUidRfid();
+                }
+
                 JOptionPane.showMessageDialog(panelContainer,
                         "ID : " + k.getIdKaryawan()
                         + "\nNama : " + k.getNamaLengkap()
                         + "\nRole : " + k.getRole()
-                        + "\nUsername : " + k.getUsername(),
+                        + "\nUsername : " + k.getUsername()
+                        + "\nUID RFID : " + (uidDetail != null ? uidDetail : "-"),
                         "Detail Karyawan",
                         JOptionPane.INFORMATION_MESSAGE);
             });

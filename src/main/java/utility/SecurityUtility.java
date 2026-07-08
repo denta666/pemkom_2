@@ -1,17 +1,14 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package utility;
 
-/**
- *
- * @author Lenovo
- */
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
+import java.util.Base64;
 
 public class SecurityUtility {
+
+    // ================= HASHING (SATU ARAH) - untuk password =================
     public static final String SHA_256 = "SHA-256";
 
     public static String getHash(String input, String algorithm) {
@@ -25,6 +22,41 @@ public class SecurityUtility {
             return sb.toString();
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException("Algoritma hashing tidak ditemukan: " + algorithm, e);
+        }
+    }
+
+    // ================= ENKRIPSI (DUA ARAH) - untuk UID RFID =================
+    private static final String ENCRYPT_ALGORITHM = "AES";
+    private static final String SECRET_KEY = "RfidSecretKey123";
+
+    public static String encrypt(String data) {
+        if (data == null || data.isEmpty()) {
+            return data;
+        }
+        try {
+            SecretKeySpec key = new SecretKeySpec(SECRET_KEY.getBytes(), ENCRYPT_ALGORITHM);
+            Cipher cipher = Cipher.getInstance(ENCRYPT_ALGORITHM);
+            cipher.init(Cipher.ENCRYPT_MODE, key);
+            byte[] encrypted = cipher.doFinal(data.getBytes());
+            return Base64.getEncoder().encodeToString(encrypted);
+        } catch (Exception e) {
+            throw new RuntimeException("Gagal enkripsi data", e);
+        }
+    }
+
+    public static String decrypt(String encryptedData) {
+        if (encryptedData == null || encryptedData.isEmpty()) {
+            return encryptedData;
+        }
+        try {
+            SecretKeySpec key = new SecretKeySpec(SECRET_KEY.getBytes(), ENCRYPT_ALGORITHM);
+            Cipher cipher = Cipher.getInstance(ENCRYPT_ALGORITHM);
+            cipher.init(Cipher.DECRYPT_MODE, key);
+            byte[] decoded = Base64.getDecoder().decode(encryptedData);
+            byte[] decrypted = cipher.doFinal(decoded);
+            return new String(decrypted);
+        } catch (Exception e) {
+            throw new RuntimeException("Gagal dekripsi data", e);
         }
     }
 }

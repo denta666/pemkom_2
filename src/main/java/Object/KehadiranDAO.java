@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package Object;
 
 import com.mongodb.client.MongoCollection;
@@ -9,8 +5,8 @@ import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import utility.SecurityUtility;
 
 public class KehadiranDAO implements BaseDAO<Kehadiran> {
 
@@ -24,7 +20,7 @@ public class KehadiranDAO implements BaseDAO<Kehadiran> {
     @Override
     public void save(Kehadiran entity) {
         Document doc = new Document("id", entity.getId())
-                .append("uidRfid", entity.getUidRfid())
+                .append("uidRfid", SecurityUtility.encrypt(entity.getUidRfid()))
                 .append("nama", entity.getNama())
                 .append("tanggal", entity.getTanggal())
                 .append("jamMasuk", entity.getJamMasuk())
@@ -41,7 +37,7 @@ public class KehadiranDAO implements BaseDAO<Kehadiran> {
                 .append("tanggal", entity.getTanggal());
 
         Document updateDoc = new Document("$set", new Document("status", entity.getStatus())
-                .append("uidRfid", entity.getUidRfid())
+                .append("uidRfid", SecurityUtility.encrypt(entity.getUidRfid()))
                 .append("nama", entity.getNama())
                 .append("jamMasuk", entity.getJamMasuk())
                 .append("jamKeluar", entity.getJamKeluar())
@@ -63,7 +59,7 @@ public class KehadiranDAO implements BaseDAO<Kehadiran> {
         for (Document doc : collection.find()) {
             list.add(new Kehadiran(
                     doc.getString("id"),
-                    doc.getString("uidRfid"),
+                    SecurityUtility.decrypt(doc.getString("uidRfid")),
                     doc.getString("nama"),
                     doc.getString("tanggal"),
                     doc.getString("jamMasuk"),
@@ -82,7 +78,7 @@ public class KehadiranDAO implements BaseDAO<Kehadiran> {
         if (doc != null) {
             return new Kehadiran(
                     doc.getString("id"),
-                    doc.getString("uidRfid"),
+                    SecurityUtility.decrypt(doc.getString("uidRfid")),
                     doc.getString("nama"),
                     doc.getString("tanggal"),
                     doc.getString("jamMasuk"),
@@ -101,7 +97,7 @@ public class KehadiranDAO implements BaseDAO<Kehadiran> {
         for (Document doc : collection.find(filter)) {
             list.add(new Kehadiran(
                     doc.getString("id"),
-                    doc.getString("uidRfid"),
+                    SecurityUtility.decrypt(doc.getString("uidRfid")),
                     doc.getString("nama"),
                     doc.getString("tanggal"),
                     doc.getString("jamMasuk"),
@@ -113,7 +109,7 @@ public class KehadiranDAO implements BaseDAO<Kehadiran> {
         return list;
     }
 
-    // 🔍 Cari berdasarkan keyword (nama/id)
+    // 🔍 Cari berdasarkan keyword (nama/id) - tidak menyentuh uidRfid, jadi aman
     public List<Kehadiran> findByKeyword(String keyword) {
 
         Document filter = new Document(
@@ -149,7 +145,7 @@ public class KehadiranDAO implements BaseDAO<Kehadiran> {
         for (Document doc : collection.find(filter)) {
             result.add(new Kehadiran(
                     doc.getString("id"),
-                    doc.getString("uidRfid"),
+                    SecurityUtility.decrypt(doc.getString("uidRfid")),
                     doc.getString("nama"),
                     doc.getString("tanggal"),
                     doc.getString("jamMasuk"),
@@ -162,15 +158,17 @@ public class KehadiranDAO implements BaseDAO<Kehadiran> {
         return result;
     }
 
+    // uidRfid yang masuk di sini adalah UID ASLI hasil scan, jadi harus dienkripsi dulu sebelum query
     public Kehadiran findByUidAndTanggal(String uidRfid, String tanggal) {
-        Document filter = new Document("uidRfid", uidRfid)
+        String uidTerenkripsi = SecurityUtility.encrypt(uidRfid);
+        Document filter = new Document("uidRfid", uidTerenkripsi)
                 .append("tanggal", tanggal);
         Document doc = collection.find(filter).first();
 
         if (doc != null) {
             return new Kehadiran(
                     doc.getString("id"),
-                    doc.getString("uidRfid"),
+                    SecurityUtility.decrypt(doc.getString("uidRfid")),
                     doc.getString("nama"),
                     doc.getString("tanggal"),
                     doc.getString("jamMasuk"),
@@ -182,13 +180,16 @@ public class KehadiranDAO implements BaseDAO<Kehadiran> {
         return null;
     }
 
+    // entity.getUidRfid() di sini juga UID ASLI, harus dienkripsi dulu untuk filter maupun update
     public void update(Kehadiran entity) {
-        Document filter = new Document("uidRfid", entity.getUidRfid())
+        String uidTerenkripsi = SecurityUtility.encrypt(entity.getUidRfid());
+
+        Document filter = new Document("uidRfid", uidTerenkripsi)
                 .append("tanggal", entity.getTanggal());
 
         Document updateDoc = new Document("$set", new Document("jamKeluar", entity.getJamKeluar())
                 .append("status", entity.getStatus())
-                .append("uidRfid", entity.getUidRfid())
+                .append("uidRfid", uidTerenkripsi)
                 .append("nama", entity.getNama())
                 .append("jamMasuk", entity.getJamMasuk())
                 .append("role", entity.getRole()));

@@ -15,7 +15,6 @@ import com.mongodb.client.MongoDatabase;
 import javax.swing.*;
 import utility.SecurityUtility;
 
-
 public class LoginPage extends javax.swing.JPanel {
 
     /**
@@ -133,17 +132,17 @@ public class LoginPage extends javax.swing.JPanel {
         String username = jTextField1.getText();
         String password = new String(jPasswordField1.getPassword());
 
-
-
         try {
             KaryawanDAO dao = new KaryawanDAO(MongoManager.getDatabase());
             Karyawan k = dao.login(username, password);
 
-
-            System.out.println("Login sebagai: " + k.getNamaLengkap() + " | ID: " + k.getIdKaryawan());
-
+            System.out.println("Login sebagai: " + k.getNamaLengkap()
+                    + " | ID: " + k.getIdKaryawan()
+                    + " | UID RFID: " + k.getUidRfid());
+            
+            
             if (k != null) {
-                
+
                 service.SessionManager.setCurrentUser(k);
                 String role = k.getRole();
                 JFrame frame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
@@ -157,7 +156,7 @@ public class LoginPage extends javax.swing.JPanel {
                 } else {
                     if (k == null) {
                         System.out.println("Login gagal: data tidak ditemukan di database.");
-                        
+
                         JOptionPane.showMessageDialog(this, "Username atau password salah!");
                         return;
                     }

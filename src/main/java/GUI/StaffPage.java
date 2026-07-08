@@ -30,6 +30,16 @@ public class StaffPage extends javax.swing.JPanel {
         initComponents();
         this.staffId = staffId; // simpan ID staff yang login
         tampilkanAbsensiSaya(jPanelAbsensi);
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        layout.setVerticalGroup(
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
     }
 
     private void tampilkanAbsensiSaya(JPanel panelContainer) {
@@ -37,7 +47,7 @@ public class StaffPage extends javax.swing.JPanel {
         panelContainer.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 10));
 
         KehadiranDAO dao = new KehadiranDAO(MongoManager.getDatabase());
-        
+
         System.out.println("Staff ID login: " + staffId);
 
         // 🔍 Filter berdasarkan id staff yang login
@@ -60,6 +70,7 @@ public class StaffPage extends javax.swing.JPanel {
         panelContainer.revalidate();
         panelContainer.repaint();
     }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -201,7 +212,6 @@ public class StaffPage extends javax.swing.JPanel {
         javax.swing.JFrame parentFrame
                 = (javax.swing.JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
 
-        
         parentFrame.dispose();
 
         // Buat frame baru untuk LoginPage (karena LoginPage adalah JPanel)
@@ -218,16 +228,18 @@ public class StaffPage extends javax.swing.JPanel {
     }//GEN-LAST:event_bntRefreshActionPerformed
 
     private void AbsenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AbsenActionPerformed
-    // Buat instance halaman AttendancePage
-    AttendancePage attendancePage = new AttendancePage();
 
-    // Ambil frame utama tempat panel ini ditampilkan
-    javax.swing.JFrame frame = (javax.swing.JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
+        // Buat instance halaman AttendancePage, kirim StaffPage sebagai halaman asal
+        AttendancePage attendancePage = new AttendancePage(this);
 
-    // Ganti konten frame dengan halaman AttendancePage
-    frame.setContentPane(attendancePage);
-    frame.revalidate();
-    frame.repaint();
+        // Ambil frame utama tempat panel ini ditampilkan
+        javax.swing.JFrame frame = (javax.swing.JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
+
+        // Ganti konten frame dengan halaman AttendancePage
+        frame.setContentPane(attendancePage);
+        frame.revalidate();
+        frame.repaint();
+
     }//GEN-LAST:event_AbsenActionPerformed
 
 

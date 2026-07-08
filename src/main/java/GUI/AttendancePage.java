@@ -5,6 +5,7 @@
 package GUI;
 
 import Object.Karyawan;
+import Object.KaryawanDAO;
 import Object.Kehadiran;
 import Object.KehadiranDAO;
 import Object.MongoManager;
@@ -13,6 +14,8 @@ import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -30,6 +33,7 @@ import service.SessionManager;
  */
 
 public class AttendancePage extends javax.swing.JPanel {
+    private javax.swing.JPanel previousPage;
 
     public AttendancePage() {
         initComponents();
@@ -42,14 +46,11 @@ public class AttendancePage extends javax.swing.JPanel {
                 "Data absensi berhasil di-refresh.",
                 "Info", JOptionPane.INFORMATION_MESSAGE);
         });
-
-        // Tombol Kembali
-        btnKembali.addActionListener(e -> {
-            CardLayout cl = (CardLayout) this.getParent().getLayout();
-            cl.show(this.getParent(), "MainMenuPage");
-            // kalau mau tutup window:
-            // SwingUtilities.getWindowAncestor(this).dispose();
-        });
+        
+    }
+    public AttendancePage(javax.swing.JPanel previousPage) {
+        initComponents();
+        this.previousPage = previousPage;
     }
 
     private void loadData() {
@@ -85,7 +86,6 @@ public class AttendancePage extends javax.swing.JPanel {
 
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
-        btnKembali = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         btnRefresh = new javax.swing.JButton();
         BtnKembali = new javax.swing.JButton();
@@ -116,9 +116,6 @@ public class AttendancePage extends javax.swing.JPanel {
 
         jPanel2.setBackground(new java.awt.Color(0, 51, 153));
 
-        btnKembali.setText("LOGOUT");
-        btnKembali.addActionListener(this::btnKembaliActionPerformed);
-
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("ATTENDANCE PAGE");
@@ -140,16 +137,13 @@ public class AttendancePage extends javax.swing.JPanel {
                 .addComponent(BtnKembali)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnRefresh)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnKembali)
-                .addGap(19, 19, 19))
+                .addGap(16, 16, 16))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addContainerGap(20, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnKembali)
                     .addComponent(jLabel1)
                     .addComponent(btnRefresh)
                     .addComponent(BtnKembali))
@@ -410,16 +404,77 @@ public class AttendancePage extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnKembaliActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnKembaliActionPerformed
-
-    }//GEN-LAST:event_btnKembaliActionPerformed
-
     private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
 
     }//GEN-LAST:event_btnRefreshActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+                                        
+    String uid = jTextField1.getText().trim();
+
+    if (uid.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Masukkan UID RFID terlebih dahulu!");
+        return;
+    }
+
+    KaryawanDAO karyawanDAO = new KaryawanDAO(MongoManager.getDatabase());
+    Karyawan karyawan = karyawanDAO.findByUid(uid);
+
+    if (karyawan == null) {
+        JOptionPane.showMessageDialog(this, "UID RFID tidak terdaftar!");
+        return;
+    }
+
+    // Tampilkan info karyawan
+    txtNama.setText(karyawan.getNamaLengkap());
+    txtId.setText(karyawan.getIdKaryawan());
+    txtRole.setText(karyawan.getRole());
+
+    KehadiranDAO kehadiranDAO = new KehadiranDAO(MongoManager.getDatabase());
+    String tanggalHariIni = LocalDate.now().toString(); // format yyyy-MM-dd
+    String jamSekarang = LocalTime.now().withNano(0).toString(); // format HH:mm:ss
+
+    Kehadiran existing = kehadiranDAO.findByUidAndTanggal(uid, tanggalHariIni);
+
+    if (existing == null) {
+        // Belum absen hari ini -> catat jam masuk
+        Kehadiran baru = new Kehadiran(
+                karyawan.getIdKaryawan(),
+                uid,
+                karyawan.getNamaLengkap(),
+                tanggalHariIni,
+                jamSekarang,
+                "",
+                "HADIR",
+                karyawan.getRole()
+        );
+        kehadiranDAO.save(baru);
+
+        DefaultTableModel model = (DefaultTableModel) tblAbsensi.getModel();
+        model.addRow(new Object[]{
+            uid, karyawan.getNamaLengkap(), jamSekarang, "", "HADIR", karyawan.getRole()
+        });
+
+        JOptionPane.showMessageDialog(this, "Absen masuk berhasil dicatat!");
+
+    } else if (existing.getJamKeluar() == null || existing.getJamKeluar().isEmpty()) {
+        // Sudah absen masuk, belum keluar -> catat jam keluar
+        existing.setJamKeluar(jamSekarang);
+        kehadiranDAO.update(existing);
+
+        DefaultTableModel model = (DefaultTableModel) tblAbsensi.getModel();
+        model.addRow(new Object[]{
+            uid, karyawan.getNamaLengkap(), existing.getJamMasuk(), jamSekarang, "PULANG", karyawan.getRole()
+        });
+
+        JOptionPane.showMessageDialog(this, "Absen keluar berhasil dicatat!");
+
+    } else {
+        JOptionPane.showMessageDialog(this, "Anda sudah absen masuk dan keluar hari ini.");
+    }
+
+    jTextField1.setText("");
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void btnScanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnScanActionPerformed
@@ -443,11 +498,14 @@ public class AttendancePage extends javax.swing.JPanel {
     }//GEN-LAST:event_btnScanActionPerformed
 
     private void BtnKembaliActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnKembaliActionPerformed
-        // Ambil frame utama tempat panel ini ditampilkan
         JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
 
-        // Ganti isi frame dengan halaman AdminPage
-        frame.setContentPane(new AdminPage());
+        // Kembali ke halaman sebelumnya (Manager atau Admin, sesuai yang buka AttendancePage)
+        if (previousPage != null) {
+            frame.setContentPane(previousPage);
+        } else {
+            frame.setContentPane(new AdminPage()); // fallback kalau dibuka tanpa referensi
+        }
         frame.revalidate();
         frame.repaint();
     }//GEN-LAST:event_BtnKembaliActionPerformed
@@ -457,7 +515,6 @@ public class AttendancePage extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BtnKembali;
-    private javax.swing.JButton btnKembali;
     private javax.swing.JButton btnRefresh;
     private javax.swing.JButton btnScan;
     private javax.swing.JButton jButton1;
