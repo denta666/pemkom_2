@@ -22,6 +22,7 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import org.bson.Document;
 import org.bson.conversions.Bson;
+import utility.LanguageManager;
 
 public class ManagerPage extends javax.swing.JPanel {
 
@@ -32,6 +33,8 @@ public class ManagerPage extends javax.swing.JPanel {
         btnRefreshActionPerformed(null);
         dao = new KehadiranDAO(MongoManager.getDatabase());
         KehadiranService service = new KehadiranService();
+        reloadTexts();
+        
         
         
         
@@ -59,13 +62,13 @@ public class ManagerPage extends javax.swing.JPanel {
 
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
-        lblHeader = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
         btnLogout = new javax.swing.JButton();
         btnRefresh = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
-        btnSearch = new javax.swing.JButton();
+        BtnCari = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
-        txtCariNama = new javax.swing.JTextField();
+        jLabelCari = new javax.swing.JTextField();
         Absen = new javax.swing.JButton();
         jPanelAbsensi = new javax.swing.JPanel();
 
@@ -73,9 +76,9 @@ public class ManagerPage extends javax.swing.JPanel {
 
         jPanel2.setBackground(new java.awt.Color(0, 51, 102));
 
-        lblHeader.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 18)); // NOI18N
-        lblHeader.setForeground(new java.awt.Color(255, 255, 255));
-        lblHeader.setText("Dashboard Manager");
+        jLabel1.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 18)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setText("Dashboard Manager");
 
         btnLogout.setBackground(new java.awt.Color(153, 153, 153));
         btnLogout.setText("LOGOUT");
@@ -90,7 +93,7 @@ public class ManagerPage extends javax.swing.JPanel {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(lblHeader)
+                .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 814, Short.MAX_VALUE)
                 .addComponent(btnRefresh)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -101,7 +104,7 @@ public class ManagerPage extends javax.swing.JPanel {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(lblHeader)
+                .addComponent(jLabel1)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addContainerGap(19, Short.MAX_VALUE)
@@ -111,12 +114,12 @@ public class ManagerPage extends javax.swing.JPanel {
                 .addGap(15, 15, 15))
         );
 
-        btnSearch.setText("Search");
-        btnSearch.addActionListener(this::btnSearchActionPerformed);
+        BtnCari.setText("Search");
+        BtnCari.addActionListener(this::BtnCariActionPerformed);
 
         jLabel2.setText("Name :");
 
-        txtCariNama.addActionListener(this::txtCariNamaActionPerformed);
+        jLabelCari.addActionListener(this::jLabelCariActionPerformed);
 
         Absen.setText("Absen");
         Absen.addActionListener(this::AbsenActionPerformed);
@@ -129,9 +132,9 @@ public class ManagerPage extends javax.swing.JPanel {
                 .addGap(15, 15, 15)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtCariNama, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jLabelCari, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnSearch)
+                .addComponent(BtnCari)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(Absen)
                 .addGap(32, 32, 32))
@@ -141,9 +144,9 @@ public class ManagerPage extends javax.swing.JPanel {
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addGap(15, 15, 15)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnSearch)
+                    .addComponent(BtnCari)
                     .addComponent(jLabel2)
-                    .addComponent(txtCariNama, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabelCari, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(Absen))
                 .addContainerGap(15, Short.MAX_VALUE))
         );
@@ -196,7 +199,15 @@ public class ManagerPage extends javax.swing.JPanel {
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
-
+    
+    private void reloadTexts() {
+    jLabel1.setText(LanguageManager.get("manager.dashboard"));
+    btnRefresh.setText(LanguageManager.get("button.refresh"));
+    btnLogout.setText(LanguageManager.get("button.logout"));
+    BtnCari.setText(LanguageManager.get("button.search"));
+    jLabelCari.setText(LanguageManager.get("manager.name"));
+}
+    
     private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
         KehadiranService service = new KehadiranService();
 
@@ -204,9 +215,9 @@ public class ManagerPage extends javax.swing.JPanel {
         service.tampilkanSemuaAbsensi(jPanelAbsensi);
     }//GEN-LAST:event_btnRefreshActionPerformed
 
-    private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
+    private void BtnCariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnCariActionPerformed
 
-        String keyword = txtCariNama.getText().trim();
+        String keyword = jLabelCari.getText().trim();
 
         JOptionPane.showMessageDialog(this, keyword);
 
@@ -217,7 +228,7 @@ public class ManagerPage extends javax.swing.JPanel {
         KehadiranService service = new KehadiranService();
         service.tampilkanHasilPencarian(jPanelAbsensi, keyword);
 
-    }//GEN-LAST:event_btnSearchActionPerformed
+    }//GEN-LAST:event_BtnCariActionPerformed
 
     private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
 
@@ -247,22 +258,22 @@ public class ManagerPage extends javax.swing.JPanel {
 
     }//GEN-LAST:event_AbsenActionPerformed
 
-    private void txtCariNamaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCariNamaActionPerformed
+    private void jLabelCariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jLabelCariActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtCariNamaActionPerformed
+    }//GEN-LAST:event_jLabelCariActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Absen;
+    private javax.swing.JButton BtnCari;
     private javax.swing.JButton btnLogout;
     private javax.swing.JButton btnRefresh;
-    private javax.swing.JButton btnSearch;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JTextField jLabelCari;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanelAbsensi;
-    private javax.swing.JLabel lblHeader;
-    private javax.swing.JTextField txtCariNama;
     // End of variables declaration//GEN-END:variables
 }

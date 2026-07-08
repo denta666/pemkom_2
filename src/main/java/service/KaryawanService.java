@@ -384,10 +384,13 @@ public class KaryawanService {
         panelContainer.revalidate();
         panelContainer.repaint();
     }
+    
+    
 
     public void tampilkanHasilPencarian(JPanel panelContainer, String keyword) {
         List<Karyawan> list = dao.findByKeyword(keyword);
         tampilkanCard(panelContainer, list);
     }
+    
 
 }

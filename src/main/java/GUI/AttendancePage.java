@@ -26,6 +26,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import service.RFIDAbsensiService;
 import service.SessionManager;
+import utility.LanguageManager;
 
 /**
  *
@@ -37,7 +38,7 @@ public class AttendancePage extends javax.swing.JPanel {
 
     public AttendancePage() {
         initComponents();
-        System.out.println("AttendancePage berhasil dibuat!");
+        reloadTexts();
 
         // Tombol Refresh
         btnRefresh.addActionListener(e -> {
@@ -86,45 +87,45 @@ public class AttendancePage extends javax.swing.JPanel {
 
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
+        jLabelTitle = new javax.swing.JLabel();
         btnRefresh = new javax.swing.JButton();
-        BtnKembali = new javax.swing.JButton();
+        btnBack = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jPanel5 = new javax.swing.JPanel();
         jPanel6 = new javax.swing.JPanel();
-        jLabel3 = new javax.swing.JLabel();
+        lblManualInput = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
-        jLabel4 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        lblUid = new javax.swing.JLabel();
+        btnAttendance = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblAbsensi = new javax.swing.JTable();
         jPanel7 = new javax.swing.JPanel();
-        jLabel5 = new javax.swing.JLabel();
+        lblTapCard = new javax.swing.JLabel();
         jPanel8 = new javax.swing.JPanel();
-        jLabel6 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
-        jLabel8 = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
+        lblNama = new javax.swing.JLabel();
+        lblId = new javax.swing.JLabel();
+        lblRole = new javax.swing.JLabel();
+        lblAvatar = new javax.swing.JLabel();
         txtNama = new javax.swing.JTextField();
         txtId = new javax.swing.JTextField();
         txtRole = new javax.swing.JTextField();
-        btnScan = new javax.swing.JButton();
+        bntahdiasd = new javax.swing.JButton();
 
         jPanel1.setBackground(new java.awt.Color(255, 153, 153));
 
         jPanel2.setBackground(new java.awt.Color(0, 51, 153));
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setText("ATTENDANCE PAGE");
+        jLabelTitle.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jLabelTitle.setForeground(new java.awt.Color(255, 255, 255));
+        jLabelTitle.setText("ATTENDANCE PAGE");
 
         btnRefresh.setText("REFRESH");
         btnRefresh.addActionListener(this::btnRefreshActionPerformed);
 
-        BtnKembali.setText("KEMBALI");
-        BtnKembali.addActionListener(this::BtnKembaliActionPerformed);
+        btnBack.setText("KEMBALI");
+        btnBack.addActionListener(this::btnBackActionPerformed);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -132,9 +133,9 @@ public class AttendancePage extends javax.swing.JPanel {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addGap(14, 14, 14)
-                .addComponent(jLabel1)
+                .addComponent(jLabelTitle)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(BtnKembali)
+                .addComponent(btnBack)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnRefresh)
                 .addGap(16, 16, 16))
@@ -144,9 +145,9 @@ public class AttendancePage extends javax.swing.JPanel {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addContainerGap(20, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
+                    .addComponent(jLabelTitle)
                     .addComponent(btnRefresh)
-                    .addComponent(BtnKembali))
+                    .addComponent(btnBack))
                 .addGap(17, 17, 17))
         );
 
@@ -204,12 +205,12 @@ public class AttendancePage extends javax.swing.JPanel {
                 .addComponent(jLabel2))
         );
 
-        jLabel3.setText("INPUT MANUAL");
+        lblManualInput.setText("INPUT MANUAL");
 
-        jLabel4.setText("MASUKAN UID RFID :");
+        lblUid.setText("MASUKAN UID RFID :");
 
-        jButton1.setText("Absen");
-        jButton1.addActionListener(this::jButton1ActionPerformed);
+        btnAttendance.setText("Absen");
+        btnAttendance.addActionListener(this::btnAttendanceActionPerformed);
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
@@ -219,28 +220,28 @@ public class AttendancePage extends javax.swing.JPanel {
                 .addContainerGap(33, Short.MAX_VALUE)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
-                        .addComponent(jLabel4)
+                        .addComponent(lblUid)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(45, 45, 45))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
-                        .addComponent(jLabel3)
+                        .addComponent(lblManualInput)
                         .addGap(222, 222, 222))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
-                        .addComponent(jButton1)
+                        .addComponent(btnAttendance)
                         .addGap(227, 227, 227))))
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addGap(21, 21, 21)
-                .addComponent(jLabel3)
+                .addComponent(lblManualInput)
                 .addGap(62, 62, 62)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4))
+                    .addComponent(lblUid))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton1)
+                .addComponent(btnAttendance)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -257,26 +258,26 @@ public class AttendancePage extends javax.swing.JPanel {
         ));
         jScrollPane1.setViewportView(tblAbsensi);
 
-        jLabel5.setText("SILAHKAN TAP KARTU DISINI");
+        lblTapCard.setText("SILAHKAN TAP KARTU DISINI");
 
         jPanel8.setBackground(new java.awt.Color(102, 102, 102));
 
-        jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jLabel6.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel6.setText("Nama Lengkap:");
+        lblNama.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblNama.setForeground(new java.awt.Color(255, 255, 255));
+        lblNama.setText("Nama Lengkap:");
 
-        jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jLabel7.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel7.setText("ID Karyawan:");
+        lblId.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblId.setForeground(new java.awt.Color(255, 255, 255));
+        lblId.setText("ID Karyawan:");
 
-        jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jLabel8.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel8.setText("Role: ");
+        lblRole.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblRole.setForeground(new java.awt.Color(255, 255, 255));
+        lblRole.setText("Role: ");
 
-        jLabel9.setBackground(new java.awt.Color(0, 204, 204));
-        jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel9.setText("Avatar");
-        jLabel9.setOpaque(true);
+        lblAvatar.setBackground(new java.awt.Color(0, 204, 204));
+        lblAvatar.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblAvatar.setText("Avatar");
+        lblAvatar.setOpaque(true);
 
         javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
         jPanel8.setLayout(jPanel8Layout);
@@ -284,19 +285,19 @@ public class AttendancePage extends javax.swing.JPanel {
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel8Layout.createSequentialGroup()
                 .addGap(22, 22, 22)
-                .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(lblAvatar, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel8Layout.createSequentialGroup()
-                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblNama, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txtNama, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel8Layout.createSequentialGroup()
-                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblId, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txtId))
                     .addGroup(jPanel8Layout.createSequentialGroup()
-                        .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblRole, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txtRole)))
                 .addContainerGap(108, Short.MAX_VALUE))
@@ -308,22 +309,22 @@ public class AttendancePage extends javax.swing.JPanel {
                 .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel8Layout.createSequentialGroup()
                         .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel6)
+                            .addComponent(lblNama)
                             .addComponent(txtNama, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel7)
+                            .addComponent(lblId)
                             .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel8)
+                            .addComponent(lblRole)
                             .addComponent(txtRole, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(lblAvatar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(37, Short.MAX_VALUE))
         );
 
-        btnScan.setText("Tap Rfid/nfc");
-        btnScan.addActionListener(this::btnScanActionPerformed);
+        bntahdiasd.setText("Tap Rfid/nfc");
+        bntahdiasd.addActionListener(this::bntahdiasdActionPerformed);
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
@@ -333,25 +334,25 @@ public class AttendancePage extends javax.swing.JPanel {
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel7Layout.createSequentialGroup()
                         .addGap(168, 168, 168)
-                        .addComponent(jLabel5))
+                        .addComponent(lblTapCard))
                     .addGroup(jPanel7Layout.createSequentialGroup()
                         .addGap(40, 40, 40)
                         .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel7Layout.createSequentialGroup()
                                 .addGap(171, 171, 171)
-                                .addComponent(btnScan)))))
+                                .addComponent(bntahdiasd)))))
                 .addContainerGap(40, Short.MAX_VALUE))
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel7Layout.createSequentialGroup()
                 .addGap(17, 17, 17)
-                .addComponent(jLabel5)
+                .addComponent(lblTapCard)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnScan)
+                .addComponent(bntahdiasd)
                 .addContainerGap(48, Short.MAX_VALUE))
         );
 
@@ -403,12 +404,28 @@ public class AttendancePage extends javax.swing.JPanel {
                 .addGap(0, 0, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
+    private void reloadTexts() {
+    jLabelTitle.setText(LanguageManager.get("attendance.title"));
 
+    btnBack.setText(LanguageManager.get("attendance.back"));
+    btnRefresh.setText(LanguageManager.get("attendance.refresh"));
+
+    lblTapCard.setText(LanguageManager.get("attendance.tapCard"));
+    lblManualInput.setText(LanguageManager.get("attendance.manualInput"));
+    lblUid.setText(LanguageManager.get("attendance.uid"));
+
+    bntahdiasd.setText(LanguageManager.get("attendance.button"));
+
+    lblNama.setText(LanguageManager.get("attendance.fullName"));
+    lblId.setText(LanguageManager.get("attendance.employeeId"));
+    lblRole.setText(LanguageManager.get("attendance.role"));
+    lblAvatar.setText(LanguageManager.get("attendance.avatar"));
+}
     private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
 
     }//GEN-LAST:event_btnRefreshActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btnAttendanceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAttendanceActionPerformed
                                         
     String uid = jTextField1.getText().trim();
 
@@ -475,9 +492,9 @@ public class AttendancePage extends javax.swing.JPanel {
 
     jTextField1.setText("");
 
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_btnAttendanceActionPerformed
 
-    private void btnScanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnScanActionPerformed
+    private void bntahdiasdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntahdiasdActionPerformed
         RFIDAbsensiService rfidService = new RFIDAbsensiService("COM3"); // sesuaikan port
         rfidService.setScanListener((karyawan, absensi) -> {
             txtNama.setText(karyawan.getNamaLengkap());
@@ -495,9 +512,9 @@ public class AttendancePage extends javax.swing.JPanel {
         });
         rfidService.startScan();
     
-    }//GEN-LAST:event_btnScanActionPerformed
+    }//GEN-LAST:event_bntahdiasdActionPerformed
 
-    private void BtnKembaliActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnKembaliActionPerformed
+    private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
         JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
 
         // Kembali ke halaman sebelumnya (Manager atau Admin, sesuai yang buka AttendancePage)
@@ -508,25 +525,18 @@ public class AttendancePage extends javax.swing.JPanel {
         }
         frame.revalidate();
         frame.repaint();
-    }//GEN-LAST:event_BtnKembaliActionPerformed
+    }//GEN-LAST:event_btnBackActionPerformed
    
     
  
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton BtnKembali;
+    private javax.swing.JButton bntahdiasd;
+    private javax.swing.JButton btnAttendance;
+    private javax.swing.JButton btnBack;
     private javax.swing.JButton btnRefresh;
-    private javax.swing.JButton btnScan;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
+    private javax.swing.JLabel jLabelTitle;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -537,6 +547,13 @@ public class AttendancePage extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel8;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField jTextField1;
+    private javax.swing.JLabel lblAvatar;
+    private javax.swing.JLabel lblId;
+    private javax.swing.JLabel lblManualInput;
+    private javax.swing.JLabel lblNama;
+    private javax.swing.JLabel lblRole;
+    private javax.swing.JLabel lblTapCard;
+    private javax.swing.JLabel lblUid;
     private javax.swing.JTable tblAbsensi;
     private javax.swing.JTextField txtId;
     private javax.swing.JTextField txtNama;

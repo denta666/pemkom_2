@@ -7,6 +7,7 @@ package GUI;
 import service.KehadiranService;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
+import utility.LanguageManager;
 
 /**
  *
@@ -19,6 +20,7 @@ public class AdminAbsensiPage extends javax.swing.JPanel {
      */
     public AdminAbsensiPage() {
         initComponents();
+        reloadTexts();
     }
     
     
@@ -35,15 +37,15 @@ public class AdminAbsensiPage extends javax.swing.JPanel {
 
         jPanelAbsensi = new javax.swing.JPanel();
         jPanel7 = new javax.swing.JPanel();
-        BtnKembali = new javax.swing.JButton();
+        btnBack = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jPanel8 = new javax.swing.JPanel();
         jPanel9 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jPanel10 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jButton5 = new javax.swing.JButton();
+        txtCari = new javax.swing.JTextField();
+        btnSearch = new javax.swing.JButton();
         btnRefresh = new javax.swing.JButton();
 
         jPanelAbsensi.setBackground(new java.awt.Color(204, 255, 255));
@@ -62,8 +64,8 @@ public class AdminAbsensiPage extends javax.swing.JPanel {
 
         jPanel7.setBackground(new java.awt.Color(0, 51, 153));
 
-        BtnKembali.setText("Kembali");
-        BtnKembali.addActionListener(this::BtnKembaliActionPerformed);
+        btnBack.setText("Kembali");
+        btnBack.addActionListener(this::btnBackActionPerformed);
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
@@ -77,7 +79,7 @@ public class AdminAbsensiPage extends javax.swing.JPanel {
                 .addGap(14, 14, 14)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(BtnKembali)
+                .addComponent(btnBack)
                 .addGap(19, 19, 19))
         );
         jPanel7Layout.setVerticalGroup(
@@ -85,7 +87,7 @@ public class AdminAbsensiPage extends javax.swing.JPanel {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
                 .addContainerGap(20, Short.MAX_VALUE)
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(BtnKembali)
+                    .addComponent(btnBack)
                     .addComponent(jLabel1))
                 .addGap(17, 17, 17))
         );
@@ -107,10 +109,10 @@ public class AdminAbsensiPage extends javax.swing.JPanel {
 
         jLabel4.setText("Nama : ");
 
-        jTextField1.addActionListener(this::jTextField1ActionPerformed);
+        txtCari.addActionListener(this::txtCariActionPerformed);
 
-        jButton5.setText("CARI");
-        jButton5.addActionListener(this::jButton5ActionPerformed);
+        btnSearch.setText("CARI");
+        btnSearch.addActionListener(this::btnSearchActionPerformed);
 
         btnRefresh.setText("REFRESH");
         btnRefresh.addActionListener(this::btnRefreshActionPerformed);
@@ -123,9 +125,9 @@ public class AdminAbsensiPage extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtCari, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton5)
+                .addComponent(btnSearch)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnRefresh)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -136,8 +138,8 @@ public class AdminAbsensiPage extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton5)
+                    .addComponent(txtCari, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnSearch)
                     .addComponent(btnRefresh))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -193,8 +195,18 @@ public class AdminAbsensiPage extends javax.swing.JPanel {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
+    
+    private void reloadTexts() {
+    jLabel1.setText(LanguageManager.get("attendance.title"));
+    btnBack.setText(LanguageManager.get("button.back"));
+    btnRefresh.setText(LanguageManager.get("button.refresh"));
+    btnSearch.setText(LanguageManager.get("button.search"));
 
-    private void BtnKembaliActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnKembaliActionPerformed
+    txtCari.setText(LanguageManager.get("attendance.name"));
+    
+}
+    
+    private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
    // Ambil frame utama tempat panel ini ditampilkan
     JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
 
@@ -202,7 +214,7 @@ public class AdminAbsensiPage extends javax.swing.JPanel {
     frame.setContentPane(new AdminPage());
     frame.revalidate();
     frame.repaint();
-    }//GEN-LAST:event_BtnKembaliActionPerformed
+    }//GEN-LAST:event_btnBackActionPerformed
 
     private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
         // Buat instance service untuk ambil data absensi
@@ -214,19 +226,27 @@ public class AdminAbsensiPage extends javax.swing.JPanel {
 
     }//GEN-LAST:event_btnRefreshActionPerformed
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+    private void txtCariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCariActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
+    }//GEN-LAST:event_txtCariActionPerformed
 
-    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton5ActionPerformed
+    private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
+  
+
+    KehadiranService service = new KehadiranService();
+
+    service.tampilkanHasilPencarian(
+            jPanelAbsensi,
+            txtCari.getText().trim()
+    );
+
+    }//GEN-LAST:event_btnSearchActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton BtnKembali;
+    private javax.swing.JButton btnBack;
     private javax.swing.JButton btnRefresh;
-    private javax.swing.JButton jButton5;
+    private javax.swing.JButton btnSearch;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;
@@ -235,6 +255,6 @@ public class AdminAbsensiPage extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel8;
     private javax.swing.JPanel jPanel9;
     private javax.swing.JPanel jPanelAbsensi;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField txtCari;
     // End of variables declaration//GEN-END:variables
 }

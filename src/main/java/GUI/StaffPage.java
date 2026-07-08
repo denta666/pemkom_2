@@ -14,6 +14,7 @@ import java.util.List;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import utility.LanguageManager;
 
 /**
  *
@@ -30,6 +31,9 @@ public class StaffPage extends javax.swing.JPanel {
         initComponents();
         this.staffId = staffId; // simpan ID staff yang login
         tampilkanAbsensiSaya(jPanelAbsensi);
+        reloadTexts();
+        
+        
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -83,10 +87,10 @@ public class StaffPage extends javax.swing.JPanel {
 
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
-        bntRefresh = new javax.swing.JButton();
-        Absen = new javax.swing.JButton();
+        btnLogout = new javax.swing.JButton();
+        jLabel111 = new javax.swing.JLabel();
+        btnRefresh = new javax.swing.JButton();
+        btnAbsen = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jPanelAbsensi = new javax.swing.JPanel();
@@ -95,18 +99,18 @@ public class StaffPage extends javax.swing.JPanel {
 
         jPanel2.setBackground(new java.awt.Color(0, 51, 102));
 
-        jButton1.setText("LOGOUT");
-        jButton1.addActionListener(this::jButton1ActionPerformed);
+        btnLogout.setText("LOGOUT");
+        btnLogout.addActionListener(this::btnLogoutActionPerformed);
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setText("Dashboard Staff");
+        jLabel111.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        jLabel111.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel111.setText("Dashboard Staff");
 
-        bntRefresh.setText("Refresh");
-        bntRefresh.addActionListener(this::bntRefreshActionPerformed);
+        btnRefresh.setText("Refresh");
+        btnRefresh.addActionListener(this::btnRefreshActionPerformed);
 
-        Absen.setText("Absen");
-        Absen.addActionListener(this::AbsenActionPerformed);
+        btnAbsen.setText("Absen");
+        btnAbsen.addActionListener(this::btnAbsenActionPerformed);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -114,13 +118,13 @@ public class StaffPage extends javax.swing.JPanel {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addGap(18, 18, 18)
-                .addComponent(jLabel1)
+                .addComponent(jLabel111)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(Absen)
+                .addComponent(btnAbsen)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(bntRefresh)
+                .addComponent(btnRefresh)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton1)
+                .addComponent(btnLogout)
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -128,10 +132,10 @@ public class StaffPage extends javax.swing.JPanel {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addContainerGap(18, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jLabel1)
-                    .addComponent(bntRefresh)
-                    .addComponent(Absen))
+                    .addComponent(btnLogout)
+                    .addComponent(jLabel111)
+                    .addComponent(btnRefresh)
+                    .addComponent(btnAbsen))
                 .addGap(16, 16, 16))
         );
 
@@ -145,14 +149,14 @@ public class StaffPage extends javax.swing.JPanel {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel2)
-                .addContainerGap(669, Short.MAX_VALUE))
+                .addContainerGap(675, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel2)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(7, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanelAbsensiLayout = new javax.swing.GroupLayout(jPanelAbsensi);
@@ -206,8 +210,14 @@ public class StaffPage extends javax.swing.JPanel {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
-
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void reloadTexts() {
+    jLabel111.setText(LanguageManager.get("staff.dashboard"));
+    btnRefresh.setText(LanguageManager.get("button.refresh"));
+    btnLogout.setText(LanguageManager.get("button.logout"));
+    btnAbsen.setText(LanguageManager.get("staff.attendance"));
+}
+    
+    private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
 
         javax.swing.JFrame parentFrame
                 = (javax.swing.JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
@@ -221,13 +231,13 @@ public class StaffPage extends javax.swing.JPanel {
         loginFrame.pack();
         loginFrame.setLocationRelativeTo(null);
         loginFrame.setVisible(true);
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_btnLogoutActionPerformed
 
-    private void bntRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntRefreshActionPerformed
+    private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
         tampilkanAbsensiSaya(jPanelAbsensi);
-    }//GEN-LAST:event_bntRefreshActionPerformed
+    }//GEN-LAST:event_btnRefreshActionPerformed
 
-    private void AbsenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AbsenActionPerformed
+    private void btnAbsenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAbsenActionPerformed
 
         // Buat instance halaman AttendancePage, kirim StaffPage sebagai halaman asal
         AttendancePage attendancePage = new AttendancePage(this);
@@ -240,14 +250,14 @@ public class StaffPage extends javax.swing.JPanel {
         frame.revalidate();
         frame.repaint();
 
-    }//GEN-LAST:event_AbsenActionPerformed
+    }//GEN-LAST:event_btnAbsenActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton Absen;
-    private javax.swing.JButton bntRefresh;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JButton btnAbsen;
+    private javax.swing.JButton btnLogout;
+    private javax.swing.JButton btnRefresh;
+    private javax.swing.JLabel jLabel111;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
